@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiz/dialog/previewdialog.dart';
+import 'package:quiz/dialog/previewdialog_2.dart';
 import 'package:quiz/levels/level1.dart';
 import 'package:quiz/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -161,7 +162,7 @@ class _GameLivelsState extends State<GameLivels> {
                       TableRow(
                           children: [
                             gameLevelButton("1",massivColorLevel[0], PreviewDialog()),
-                            gameLevelButton("2",massivColorLevel[1], Level1()),
+                            gameLevelButton("2",massivColorLevel[1], PreviewDialog_2()),
                             gameLevelButton("3",massivColorLevel[2], Level1()),
                             gameLevelButton("4",massivColorLevel[3], Level1()),
                             gameLevelButton("5",massivColorLevel[4], Level1()),
