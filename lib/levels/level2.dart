@@ -21,10 +21,12 @@ String text = ""; //пустой текск в полосе пройденног
 //--------Переменные для логики - Начало---------
 int numRandom; //Переменная для генерации случайных чисел
 bool mouse=true;//Переменная для видимости мышки
+int proidenUroven;//Пройденный уровень
 
 //Logika_Level1 logika_level1 = new Logika_Level1(); //Создали новый объект из класса Logika_Level1
 Random random = new Random(); //Для генерации случайных чисел
 int n = 0; //Учавствует в цикле из 20 задний
+int nNagimaniya=0;//Кол-во нажатий
 int correct_answer = 0; //Кол-во правильных ответов
 bool correct_wrong = true; //правильно или непарвильно
 bool isList = true; //логич перемен для активации дополнительных кнопок
@@ -137,7 +139,7 @@ Widget gameLevel(massivColorLevel1) {
 //########Общий виджет строки с картинками норок - Начало-------
 @override
 Widget tableRow(
-  massivImage,
+  massivImage, int numberNorki,
 ) {
   return InkWell(
     child: Container(
@@ -152,6 +154,15 @@ Widget tableRow(
     ),
     //-------Логика проверки больше или меньше нажатая Норка - Начало---------------
     onTap: () {
+      nNagimaniya++;
+      if(numberNorki==numRandom){
+        correct_answer = correct_answer + 1; //то добавляем единицу
+        correct_wrong = true; //присаиваем правильно
+        massivColorLevel1[n] = Colors.yellow; //присаиваем желтый - правильно
+      } else {
+        correct_wrong = false; //присаиваем неправильно
+        massivColorLevel1[n] = Colors.red; //присаиваем красный - неправильно
+      }
       print("Нажал, ");
       print("mouse= "); print(mouse);
       print("isList= "); print(mouse);
@@ -181,23 +192,28 @@ class _Level2State extends State<Level2> {
   void initState() {
     super.initState();
     dischargeState();
-    time_function();
+    time_function1();
   }
 //+++++++++++Функция При входе на данный уровень игры обращаемся через данную функцию к функции генерации случайных чисел randomLeftRight(); - Конец-------
 
-//+++++++++++Функция определения правильно и неправильно отвеченных вопросов и окончания игры - Начало+++++++++++++
+//+++++++++++Функция сброса переменных при начале игры - Начало+++++++++++++
   @override
-  void dischargeState() {
+  void dischargeState() async{
     n = 0; //Учавствует в цикле из 20 задний
+    nNagimaniya=0;//Кол-во нажатий
     correct_answer = 0; //Кол-во правильных ответов
     correct_wrong = true; //правильно или непарвильно
     mouse=false;//при начале игры мышку не должно быть видно
     isList = true; //логич перемен для активации дополнительных кнопок
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    proidenUroven=pref.getInt("Level_completed");//присваеваем переменной номер пройденного уровня
+    print(nameLevelInt);
+
     for (int i = 0; i <= 19; i++) {
       massivColorLevel1[i] = Colors.blueGrey;
     }
   }
-//+++++++++++Функция определения правильно и неправильно отвеченных вопросов и окончания игры - Конец+++++++++++++
+//+++++++++++Функция сброса переменных при начале игры - Конец+++++++++++++
 
 //+++++++++++Функция сохранения пройденного уровня в памяти телефона - Начало----------------
   @override
@@ -211,8 +227,9 @@ class _Level2State extends State<Level2> {
 
 //+++++++++++Функция здержки времени  - Начало------
   Future time_function() async{
-    if (n<=19){
+    if (n<20){
       setState(() {
+
         Timer(Duration(seconds: 1),(){
           n++;
           mouse=false;
@@ -225,11 +242,18 @@ class _Level2State extends State<Level2> {
 
   Future time_function1() async{
     setState(() {
-      if (n>=19){
-        mouse=true;
-        isList=false;
+      if (n>0 && massivColorLevel1[n-1]==Colors.blue){massivColorLevel1[n-1]=Colors.red;}
+      massivColorLevel1[n]=Colors.blue;
+      if (n>=20){//если n>=20, значит игра закончена
+        isList=false;//присваеваем ложь и выходят кнопки повторить или следующий уровень
+        if((n-correct_answer)<=level_of_difficulty){//если уровень пройден
+          _rowKey.currentState.showSnackBar(SnackBar(content: Text("Поздравляю!!! Уровень пройден. Вы поймали " + correct_answer.toString() + " мышек " + (n).toString())));
+          saveInMemory();// вызывем функцию сохранения пройденного уровеня в памяти телефона
+        }else{
+          _rowKey.currentState.showSnackBar(SnackBar(content: Text("Уровень не пройден!!! Вы поймали только " + correct_answer.toString() + " мышек из " + (n).toString())));
+        }
       }else{
-        Timer(Duration(seconds: 1),(){
+        Timer(Duration(seconds: 2),(){
           mouse=true;
           time_function();
         });
@@ -356,38 +380,38 @@ class _Level2State extends State<Level2> {
                   children: <TableRow>[
                     TableRow(
                       children: [
-                        tableRow((numRandom==0) ?_massivImageLevel2[1]:_massivImageLevel2[0]),
-                        tableRow((numRandom==1) ?_massivImageLevel2[1]:_massivImageLevel2[0]),
-                        tableRow(_massivImageLevel2[2]),
-                        tableRow((numRandom==2) ?_massivImageLevel2[1]:_massivImageLevel2[0]),
-                        tableRow(_massivImageLevel2[2]),
+                        tableRow((numRandom==0) ?_massivImageLevel2[1]:_massivImageLevel2[0],0),
+                        tableRow((numRandom==1) ?_massivImageLevel2[1]:_massivImageLevel2[0],1),
+                        tableRow(_massivImageLevel2[2],11),
+                        tableRow((numRandom==2) ?_massivImageLevel2[1]:_massivImageLevel2[0],2),
+                        tableRow(_massivImageLevel2[2],11),
                       ],
                     ),
                     TableRow(
                       children: [
-                        tableRow(_massivImageLevel2[2]),
-                        tableRow(_massivImageLevel2[2]),
-                        tableRow((numRandom==3) ?_massivImageLevel2[1]:_massivImageLevel2[0]),
-                        tableRow((numRandom==4) ?_massivImageLevel2[1]:_massivImageLevel2[0]),
-                        tableRow(_massivImageLevel2[2]),
+                        tableRow(_massivImageLevel2[2],11),
+                        tableRow(_massivImageLevel2[2],11),
+                        tableRow((numRandom==3) ?_massivImageLevel2[1]:_massivImageLevel2[0],3),
+                        tableRow((numRandom==4) ?_massivImageLevel2[1]:_massivImageLevel2[0],4),
+                        tableRow(_massivImageLevel2[2],11),
                       ],
                     ),
                     TableRow(
                       children: [
-                        tableRow((numRandom==5) ?_massivImageLevel2[1]:_massivImageLevel2[0]),
-                        tableRow(_massivImageLevel2[2]),
-                        tableRow(_massivImageLevel2[2]),
-                        tableRow((numRandom==6) ?_massivImageLevel2[1]:_massivImageLevel2[0]),
-                        tableRow((numRandom==7) ?_massivImageLevel2[1]:_massivImageLevel2[0]),
+                        tableRow((numRandom==5) ?_massivImageLevel2[1]:_massivImageLevel2[0],5),
+                        tableRow(_massivImageLevel2[2],11),
+                        tableRow(_massivImageLevel2[2],11),
+                        tableRow((numRandom==6) ?_massivImageLevel2[1]:_massivImageLevel2[0],6),
+                        tableRow((numRandom==7) ?_massivImageLevel2[1]:_massivImageLevel2[0],7),
                       ],
                     ),
                     TableRow(
                       children: [
-                        tableRow(_massivImageLevel2[2]),
-                        tableRow((numRandom==8) ?_massivImageLevel2[1]:_massivImageLevel2[0]),
-                        tableRow(_massivImageLevel2[2]),
-                        tableRow((numRandom==9) ?_massivImageLevel2[1]:_massivImageLevel2[0]),
-                        tableRow(_massivImageLevel2[2]),
+                        tableRow(_massivImageLevel2[2],11),
+                        tableRow((numRandom==8) ?_massivImageLevel2[1]:_massivImageLevel2[0],8),
+                        tableRow(_massivImageLevel2[2],11),
+                        tableRow((numRandom==9) ?_massivImageLevel2[1]:_massivImageLevel2[0],9),
+                        tableRow(_massivImageLevel2[2],11),
                       ],
                     ),
                   ],
@@ -396,38 +420,38 @@ class _Level2State extends State<Level2> {
                   children: <TableRow>[
                     TableRow(
                       children: [
-                        tableRow(_massivImageLevel2[0]),
-                        tableRow(_massivImageLevel2[0]),
-                        tableRow(_massivImageLevel2[2]),
-                        tableRow(_massivImageLevel2[0]),
-                        tableRow(_massivImageLevel2[2]),
+                        tableRow(_massivImageLevel2[0],11),
+                        tableRow(_massivImageLevel2[0],11),
+                        tableRow(_massivImageLevel2[2],11),
+                        tableRow(_massivImageLevel2[0],11),
+                        tableRow(_massivImageLevel2[2],11),
                       ],
                     ),
                     TableRow(
                       children: [
-                        tableRow(_massivImageLevel2[2]),
-                        tableRow(_massivImageLevel2[2]),
-                        tableRow(_massivImageLevel2[0]),
-                        tableRow(_massivImageLevel2[0]),
-                        tableRow(_massivImageLevel2[2]),
+                        tableRow(_massivImageLevel2[2],11),
+                        tableRow(_massivImageLevel2[2],11),
+                        tableRow(_massivImageLevel2[0],11),
+                        tableRow(_massivImageLevel2[0],11),
+                        tableRow(_massivImageLevel2[2],11),
                       ],
                     ),
                     TableRow(
                       children: [
-                        tableRow(_massivImageLevel2[0]),
-                        tableRow(_massivImageLevel2[2]),
-                        tableRow(_massivImageLevel2[2]),
-                        tableRow(_massivImageLevel2[0]),
-                        tableRow(_massivImageLevel2[0]),
+                        tableRow(_massivImageLevel2[0],11),
+                        tableRow(_massivImageLevel2[2],11),
+                        tableRow(_massivImageLevel2[2],11),
+                        tableRow(_massivImageLevel2[0],11),
+                        tableRow(_massivImageLevel2[0],11),
                       ],
                     ),
                     TableRow(
                       children: [
-                        tableRow(_massivImageLevel2[2]),
-                        tableRow(_massivImageLevel2[0]),
-                        tableRow(_massivImageLevel2[2]),
-                        tableRow(_massivImageLevel2[0]),
-                        tableRow(_massivImageLevel2[2]),
+                        tableRow(_massivImageLevel2[2],11),
+                        tableRow(_massivImageLevel2[0],11),
+                        tableRow(_massivImageLevel2[2],11),
+                        tableRow(_massivImageLevel2[0],11),
+                        tableRow(_massivImageLevel2[2],11),
                       ],
                     ),
                   ],
@@ -471,10 +495,10 @@ class _Level2State extends State<Level2> {
                                   //border: Border.all(width: 1, color: Colors.black12),
                                 ),
                                 child: Text(
-                                  "Поймай",
+                                  massivColorLevel1[n-1]==Colors.yellow ?"Поймал": "Не поймал",
                                   textScaleFactor: 1.5,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: massivColorLevel1[n-1]==Colors.yellow ?Colors.white:Colors.red),
                                 ),
                               ),
                               //-----------Контейнер с текстом под картинками - Конец---------------
@@ -547,7 +571,8 @@ class _Level2State extends State<Level2> {
                                   ),
                                   borderRadius: BorderRadius.all(Radius.circular(20)),
                                 ),
-                                child: RaisedButton(
+                                child: proidenUroven==nameLevelInt ?
+                                RaisedButton(
                                   elevation: 0.0, //убераем тень
                                   color: Colors.transparent,
                                   child: Text(
@@ -559,6 +584,20 @@ class _Level2State extends State<Level2> {
                                   onPressed: () {
                                     dischargeState(); //вызываем функцию сброса данных для логики
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => GameLivels()));
+                                  },
+                                ):
+                                RaisedButton(
+                                  elevation: 0.0, //убераем тень
+                                  color: Colors.transparent,
+                                  child: Text(
+                                    "Уровень не пройден",
+                                    textScaleFactor: 1.0,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.red),
+                                  ),
+                                  onPressed: () {
+                                    dischargeState(); //вызываем функцию сброса данных для логики
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Level2()));
                                   },
                                 ),
                                 //--------Кнопка "Следующий уровень" - Конец--------------
