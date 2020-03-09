@@ -192,7 +192,10 @@ class _Level2State extends State<Level2> {
   void initState() {
     super.initState();
     dischargeState();
-    time_function1();
+    Timer(Duration(milliseconds: 50),(){
+      time_function1();
+    });
+
   }
 //+++++++++++Функция При входе на данный уровень игры обращаемся через данную функцию к функции генерации случайных чисел randomLeftRight(); - Конец-------
 
@@ -207,8 +210,6 @@ class _Level2State extends State<Level2> {
     isList = true; //логич перемен для активации дополнительных кнопок
     SharedPreferences pref = await SharedPreferences.getInstance();
     proidenUroven=pref.getInt("Level_completed");//присваеваем переменной номер пройденного уровня
-    print(nameLevelInt);
-
     for (int i = 0; i <= 19; i++) {
       massivColorLevel1[i] = Colors.blueGrey;
     }
@@ -229,9 +230,9 @@ class _Level2State extends State<Level2> {
   Future time_function() async{
     if (n<20){
       setState(() {
-
+        print("n ");print(n);
         Timer(Duration(seconds: 1),(){
-          n++;
+          n=n+1;
           mouse=false;
           randomGenerator();
           time_function1();
@@ -242,8 +243,8 @@ class _Level2State extends State<Level2> {
 
   Future time_function1() async{
     setState(() {
-      if (n>0 && massivColorLevel1[n-1]==Colors.blue){massivColorLevel1[n-1]=Colors.red;}
       massivColorLevel1[n]=Colors.blue;
+      if (n>=0 && massivColorLevel1[n-1]==Colors.blue){massivColorLevel1[n-1]=Colors.red;}
       if (n>=20){//если n>=20, значит игра закончена
         isList=false;//присваеваем ложь и выходят кнопки повторить или следующий уровень
         if((n-correct_answer)<=level_of_difficulty){//если уровень пройден
@@ -306,7 +307,9 @@ class _Level2State extends State<Level2> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                   ),
                   onPressed: () {
-                    dischargeState();
+                    setState(() {
+                      n=20;
+                    });
                     Navigator.push(context, MaterialPageRoute(builder: (context) => GameLivels()));
                   },
                 ),
