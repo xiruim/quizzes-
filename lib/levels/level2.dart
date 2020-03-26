@@ -220,11 +220,22 @@ class _Level2State extends State<Level2> {
   @override
   void saveInMemory() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt("Level_completed", nameLevelInt); //сохраняем пройденный уровень в памяти телефона
+    await prefs.setInt("Level_completed", nameLevelInt+1); //сохраняем пройденный уровень в памяти телефона
     print(nameLevelInt);
   }
 
 //+++++++++++Функция сохранения пройденного уровня в памяти телефона - Конец----------------
+
+  //++++++++Функция проверки сложности уровня - Начало-------
+  @override
+  void slognostLevel() async{
+    SharedPreferences pref=await SharedPreferences.getInstance();
+    level_of_difficulty=pref.getInt("Uroven_slognosti");//присваеваем переменной уровень сложности
+
+    print("Уровень сложности");  print(level_of_difficulty);
+
+  }
+  //++++++++Функция проверки сложности уровня - Конец-------
 
 //+++++++++++Функция здержки времени  - Начало------
   Future time_function() async{

@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:quiz/logika/save_uroven_in_memoru.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz/logika/logika_level1.dart';
@@ -27,6 +28,7 @@ int correct_answer = 0; //Кол-во правильных ответов
 bool correct_wrong = true; //правильно или непарвильно
 bool isList = true; //логич перемен для активации дополнительных кнопок
 int level_of_difficulty = 3; //уровень сложности игры (1, 2 или 3)
+
 //--------Переменные для логики - Конец---------
 
 //--------Переменные размещения на экране - Начало--------
@@ -159,6 +161,10 @@ Widget gameLevel(massivColorLevel1) {
 //---Конец---Общий виджет полоса пройденных вопросов-------
 
 class _Level1State extends State<Level1> {
+
+  SaveUrovenInMemoru _saveUrovenInMemoru = SaveUrovenInMemoru();// Вызываем класс записи в память
+
+
   //--------Задаем ключи - Начало----------
   final _rowKey = GlobalKey<ScaffoldState>();
   //--------Задаем ключи - Конец----------
@@ -170,8 +176,20 @@ class _Level1State extends State<Level1> {
     super.initState();
     randomLeftRight();
     dischargeState();
+    slognostLevel();
   }
   //---------При входе на данный уровень игры обращаемся через данную функцию к функции генерации случайных чисел randomLeftRight(); - Конец-------
+
+  //---------Функция проверки сложности уровня - Начало-------
+  @override
+  void slognostLevel() async{
+    SharedPreferences pref=await SharedPreferences.getInstance();
+    level_of_difficulty=pref.getInt("Uroven_slognosti");//присваеваем переменной уровень сложности
+
+    print("Уровень сложности");  print(level_of_difficulty);
+
+  }
+  //---------Функция проверки сложности уровня - Конец-------
 
   //---------При входе на данный уровень игры обращаемся через данную функцию к функции генерации случайных чисел randomLeftRight(); - Начало-------
 
@@ -191,8 +209,8 @@ class _Level1State extends State<Level1> {
   @override
   void saveInMemory() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt("Level_completed", nameLevelInt); //сохраняем пройденный уровень в памяти телефона
-    print(nameLevelInt);
+    await prefs.setInt("Level_completed", nameLevelInt+1); //открываем следующий уровень и сохраняем в памяти телефона
+    print("nameLevelInt ");print(nameLevelInt);
   }
 
   //---------Функция сохранения пройденного уровня в памяти телефона - Конец----------------

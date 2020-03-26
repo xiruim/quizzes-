@@ -12,7 +12,11 @@ class GameLivels extends StatefulWidget {
 
 class _GameLivelsState extends State<GameLivels> {
   //------переменные для ячеек-------
-  int check=0;
+  int check;
+
+  //--------Задаем ключи - Начало----------
+  final _rowKey = GlobalKey<ScaffoldState>();
+  //--------Задаем ключи - Конец----------
 
   //---------При входе на данную страничку обращаемся через данную функцию к функции проверки пройденных уровней; - Начало-------
 
@@ -67,6 +71,7 @@ class _GameLivelsState extends State<GameLivels> {
   void checkLevel() async{
     SharedPreferences pref=await SharedPreferences.getInstance();
     check=pref.getInt("Level_completed");//присваеваем переменной номер пройденного уровня
+    if (check==0){check=1;}
     for(int i=0; i<=29; i++){
       if(i<check){
         setState(() {//применяем чтобы обновить виджет, без этого цвет цифр пройденных этапов не меняется
@@ -74,18 +79,24 @@ class _GameLivelsState extends State<GameLivels> {
         });
       }
     }
-    print("check");  print(check);
+    print("Пройденый уровень ");  print(check);
     print(massivColorLevel[check-1]);
   }
   //---------Функция проверки пройденного уровня - Конец-------
 
 
   //---Начало---Общий виджет кнопок с номером уровня-------
-  Widget gameLevelButton(String text,massivColorLevel, nameScreen){
+  Widget gameLevelButton(String text,massivColorLevel, nameScreen, int namberLevel){
     return InkWell(
       onTap: (){
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context)=> nameScreen));
+        if (namberLevel<=check){
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context)=> nameScreen));
+        }else{
+            _rowKey.currentState.showSnackBar(SnackBar(content:Text("Уровень закрыт")));
+            print("открыт уровень ");  print(check);
+            }
+
 
       },
       child: Container(
@@ -115,6 +126,7 @@ class _GameLivelsState extends State<GameLivels> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _rowKey,
       body: Center(
            child: Stack(
             children: <Widget>[
@@ -161,52 +173,52 @@ class _GameLivelsState extends State<GameLivels> {
                     children: <TableRow>[
                       TableRow(
                           children: [
-                            gameLevelButton("1",massivColorLevel[0], PreviewDialog()),
-                            gameLevelButton("2",massivColorLevel[1], PreviewDialog_2()),
-                            gameLevelButton("3",massivColorLevel[2], Level1()),
-                            gameLevelButton("4",massivColorLevel[3], Level1()),
-                            gameLevelButton("5",massivColorLevel[4], Level1()),
+                            gameLevelButton("1",massivColorLevel[0], PreviewDialog(),1),
+                            gameLevelButton("2",massivColorLevel[1], PreviewDialog_2(),2),
+                            gameLevelButton("3",massivColorLevel[2], Level1(),3),
+                            gameLevelButton("4",massivColorLevel[3], Level1(),4),
+                            gameLevelButton("5",massivColorLevel[4], Level1(),5),
                           ]),
 
                       TableRow(
                           children: [
-                            gameLevelButton("6",massivColorLevel[5], Level1()),
-                            gameLevelButton("7",massivColorLevel[6], Level1()),
-                            gameLevelButton("8",massivColorLevel[7], Level1()),
-                            gameLevelButton("9",massivColorLevel[8], Level1()),
-                            gameLevelButton("10",massivColorLevel[9], Level1()),
+                            gameLevelButton("6",massivColorLevel[5], Level1(),6),
+                            gameLevelButton("7",massivColorLevel[6], Level1(),7),
+                            gameLevelButton("8",massivColorLevel[7], Level1(),8),
+                            gameLevelButton("9",massivColorLevel[8], Level1(),9),
+                            gameLevelButton("10",massivColorLevel[9], Level1(),10),
                           ]),
                       TableRow(
                           children: [
-                            gameLevelButton("11",massivColorLevel[10], Level1()),
-                            gameLevelButton("12",massivColorLevel[11], Level1()),
-                            gameLevelButton("13",massivColorLevel[12], Level1()),
-                            gameLevelButton("14",massivColorLevel[13], Level1()),
-                            gameLevelButton("15",massivColorLevel[14], Level1()),
+                            gameLevelButton("11",massivColorLevel[10], Level1(),11),
+                            gameLevelButton("12",massivColorLevel[11], Level1(),12),
+                            gameLevelButton("13",massivColorLevel[12], Level1(),13),
+                            gameLevelButton("14",massivColorLevel[13], Level1(),14),
+                            gameLevelButton("15",massivColorLevel[14], Level1(),15),
                           ]),
                       TableRow(
                           children: [
-                            gameLevelButton("16",massivColorLevel[15], Level1()),
-                            gameLevelButton("17",massivColorLevel[16], Level1()),
-                            gameLevelButton("18",massivColorLevel[17], Level1()),
-                            gameLevelButton("19",massivColorLevel[18], Level1()),
-                            gameLevelButton("20",massivColorLevel[19], Level1()),
+                            gameLevelButton("16",massivColorLevel[15], Level1(),16),
+                            gameLevelButton("17",massivColorLevel[16], Level1(),17),
+                            gameLevelButton("18",massivColorLevel[17], Level1(),18),
+                            gameLevelButton("19",massivColorLevel[18], Level1(),19),
+                            gameLevelButton("20",massivColorLevel[19], Level1(),20),
                           ]),
                       TableRow(
                           children: [
-                            gameLevelButton("21",massivColorLevel[20], Level1()),
-                            gameLevelButton("22",massivColorLevel[21], Level1()),
-                            gameLevelButton("23",massivColorLevel[22], Level1()),
-                            gameLevelButton("24",massivColorLevel[23], Level1()),
-                            gameLevelButton("25",massivColorLevel[24], Level1()),
+                            gameLevelButton("21",massivColorLevel[20], Level1(),21),
+                            gameLevelButton("22",massivColorLevel[21], Level1(),22),
+                            gameLevelButton("23",massivColorLevel[22], Level1(),23),
+                            gameLevelButton("24",massivColorLevel[23], Level1(),24),
+                            gameLevelButton("25",massivColorLevel[24], Level1(),25),
                           ]),
                       TableRow(
                           children: [
-                            gameLevelButton("26",massivColorLevel[25], Level1()),
-                            gameLevelButton("27",massivColorLevel[26], Level1()),
-                            gameLevelButton("28",massivColorLevel[27], Level1()),
-                            gameLevelButton("29",massivColorLevel[28], Level1()),
-                            gameLevelButton("30",massivColorLevel[29], Level1()),
+                            gameLevelButton("26",massivColorLevel[25], Level1(),26),
+                            gameLevelButton("27",massivColorLevel[26], Level1(),27),
+                            gameLevelButton("28",massivColorLevel[27], Level1(),28),
+                            gameLevelButton("29",massivColorLevel[28], Level1(),29),
+                            gameLevelButton("30",massivColorLevel[29], Level1(),30),
                           ]),
                     ],
                   ),
