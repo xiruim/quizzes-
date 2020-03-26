@@ -205,7 +205,7 @@ class _Level2State extends State<Level2> {
     n = 0; //Учавствует в цикле из 20 задний
     nNagimaniya=0;//Кол-во нажатий
     correct_answer = 0; //Кол-во правильных ответов
-    correct_wrong = true; //правильно или непарвильно
+    correct_wrong = true; //правильно или неправильно
     mouse=false;//при начале игры мышку не должно быть видно
     isList = true; //логич перемен для активации дополнительных кнопок
     SharedPreferences pref = await SharedPreferences.getInstance();

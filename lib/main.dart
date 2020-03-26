@@ -142,9 +142,17 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       key: _rowKey,
       //DDDDDD ----- Боковое выпадающее меню - Начало-------
+
       drawer: Drawer(
         child: Container(
-          color: Colors.blue,
+          decoration: BoxDecoration(
+
+            //-----------Основной фон - Начало----------------------------------------
+              image: DecorationImage(
+                  image: Image.asset("assets/main_background.jpg").image, //фоновое изображение контейнера
+                  fit: BoxFit.cover //растягивает н весь экраан
+              )),
+          //-----------Основной фон - Конец----------------------------------------
           child: Column(
             children: <Widget>[
               Container(
@@ -234,29 +242,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-//            //------------------Выбор уровня - Начало-----------
-//            Positioned(
-//              top: 380,
-////             left: MediaQuery.of(context).size.width/2,
-//              width: MediaQuery.of(context).size.width,//Разтягиваем на всю ширину экрана
-//              child: Table(
-//                children: [
-//                  TableRow(children: <TableCell>[
-//                    tablRadioComponent(3),
-//                    tablNameUrovenComponent("Легкий", 1.2, 2),
-//                  ]),
-//                  TableRow(children: <TableCell>[
-//                    tablRadioComponent(2),
-//                    tablNameUrovenComponent("Средний", 1.2, 2),
-//                  ]),
-//                  TableRow(children: <TableCell>[
-//                    tablRadioComponent(1),
-//                    tablNameUrovenComponent("Тяжелый", 1.2, 2),
-//                  ]),
-//                ],
-//              ),
-//            ),
-//            //------------------Выбор уровня - Конец-----------
             Positioned(
               top: 560,
               left: MediaQuery.of(context).size.width / 2 - 150 / 2,
