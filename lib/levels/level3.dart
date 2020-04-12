@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz/logika/logika_level1.dart';
@@ -7,9 +8,9 @@ import 'dart:core';
 
 import '../gamelivels.dart';
 
-class Level2 extends StatefulWidget {
+class Level3 extends StatefulWidget {
   @override
-  _Level2State createState() => _Level2State();
+  _Level3State createState() => _Level3State();
 }
 //---------------------------------------------------------------------------------------//
 //--------Текстовые переменные - Начало-------
@@ -20,15 +21,16 @@ String text = ""; //пустой текск в полосе пройденног
 
 //--------Переменные для логики - Начало---------
 int numRandom; //Переменная для генерации случайных чисел
-bool mouse=true;//Переменная для видимости мышки
 int proidenUroven;//Пройденный уровень
+int nNagimaniya=0;//переменная увеличения при последовательном нажатии цифр
+int j0,j1,j2,j3,j4,j5,j6,j7,j8,j9,j10,j11,j12,j13,j14;//переменные для размещения цифр на поле
 
-//Logika_Level1 logika_level1 = new Logika_Level1(); //Создали новый объект из класса Logika_Level1
 Random random = new Random(); //Для генерации случайных чисел
 int n = 0; //Учавствует в цикле из 20 задний
-int nNagimaniya=0;//Кол-во нажатий
+//int nNagimaniya=0;//Кол-во нажатий
 int correct_answer = 0; //Кол-во правильных ответов
 bool correct_wrong = true; //правильно или непарвильно
+
 bool isList = true; //логич перемен для активации дополнительных кнопок
 int level_of_difficulty; //уровень сложности игры (1, 2 или 3)
 //--------Переменные для логики - Конец---------
@@ -53,115 +55,141 @@ double left_Level_text = 200; //Начальное положение кнопк
 
 //========================================================================================================//
 //=========Массив с картинками типа ХЕШ-коллекции набор пар ключ-значение - Начало-------
-var _massivImageLevel2 = {
-  0: Image.asset("assets/img_level2/norka_1.png"),
-  1: Image.asset("assets/img_level2/mouse1.png"),
-  2: Image.asset("assets/img_level2/norka_1_gok.png"),
+var _massivImageLevel3 = {
+  0: Image.asset("assets/img_level3/0.png"),
+  1: Image.asset("assets/img_level3/1.png"),
+  2: Image.asset("assets/img_level3/2.png"),
+  3: Image.asset("assets/img_level3/3.png"),
+  4: Image.asset("assets/img_level3/4.png"),
+  5: Image.asset("assets/img_level3/5.png"),
+  6: Image.asset("assets/img_level3/6.png"),
+  7: Image.asset("assets/img_level3/7.png"),
+  8: Image.asset("assets/img_level3/8.png"),
+  9: Image.asset("assets/img_level3/9.png"),
+  10: Image.asset("assets/img_level3/10.png"),
+  11: Image.asset("assets/img_level3/11.png"),
+  12: Image.asset("assets/img_level3/12.png"),
+  13: Image.asset("assets/img_level3/13.png"),
+  14: Image.asset("assets/img_level3/14.png"),
+  15: Image.asset("assets/img_level3/of.png"),//не активная ячейка с цифрой
+  16: Image.asset("assets/img_level3/on.png"),//активная ячейка с цифрой, т.е. правильно нажатая
 };
 //=========Массив с картинками типа ХЕШ-коллекции набор пар ключ-значение - Конец-------
 
+////=========Массив с цифрами  типа ХЕШ-коллекции набор пар ключ-значение - Начало-------
+//var massivNumberLevel3 = {
+//  0: 1,
+//  1: 2,
+//  2: 3,
+//  3: 4,
+//  4: 5,
+//  5: 6,
+//  6: 7,
+//  7: 8,
+//  8: 9,
+//  9: 10,
+//  10: 11,
+//  11: 12,
+//  12: 13,
+//  13: 14,
+//  14: 15,
+//
+//};
+////=========Массив с цифрами типа ХЕШ-коллекции набор пар ключ-значение - Конец-------
 
 
-//=========Массив с Color типа ХЕШ-коллекции набор пар ключ-значение для полосы пройденных вопросов - Начало-------
-var massivColorLevel1 = {
-  0: Colors.blueGrey,
-  1: Colors.blueGrey,
-  2: Colors.blueGrey,
-  3: Colors.blueGrey,
-  4: Colors.blueGrey,
-  5: Colors.blueGrey,
-  6: Colors.blueGrey,
-  7: Colors.blueGrey,
-  8: Colors.blueGrey,
-  9: Colors.blueGrey,
-  10: Colors.blueGrey,
-  11: Colors.blueGrey,
-  12: Colors.blueGrey,
-  13: Colors.blueGrey,
-  14: Colors.blueGrey,
-  15: Colors.blueGrey,
-  16: Colors.blueGrey,
-  17: Colors.blueGrey,
-  18: Colors.blueGrey,
-  19: Colors.blueGrey,
-};
-//=========Массив с Color типа ХЕШ-коллекции набор пар ключ-значение для полосы пройденных вопросов - Конец-------
+//##################################### Виджеты ###################################################//
 
 
-
-
-
-//########################################################################################//
-//########Начало---Общий виджет полоса пройденных вопросов-------
-Widget gameLevel(massivColorLevel1) {
-  return Container(
-    decoration: BoxDecoration(
-      color: massivColorLevel1,
-      boxShadow: [BoxShadow(blurRadius: 1.0)],
-      borderRadius: BorderRadius.all(Radius.circular(2)),
-      border: Border.all(width: 1, color: Colors.black12),
-    ),
-    alignment: Alignment.center,
-    margin: EdgeInsets.all(1),
-    width: width_Polosa,
-    height: height_Polosa,
-    child: Text(
-      "",
-      style: TextStyle(fontSize: 2, fontWeight: FontWeight.bold, color: Colors.white),
-    ),
-  );
-}
-//########Конец---Общий виджет полоса пройденных вопросов-------
-
-//########Общий виджет строки с картинками норок - Начало-------
+//######## Общий виджет строки с клетками для цифр - Начало-------
 @override
 Widget tableRow(
-  massivImage, int numberNorki,
+  massivImage, massivImage2, massivNumber, int numberCell,
 ) {
   return InkWell(
-    child: Container(
-      width: 100,
-      padding: EdgeInsets.all(5),
-      margin: EdgeInsets.all(1),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        border: Border.all(width: 1, color: Colors.black12),
-      ),
-      child: massivImage, //через эту переменную сюда попадает картинкаа из массива
+    child: Stack (
+      children: <Widget>[
+        Positioned(
+          child: Container(
+            width: 100,
+            padding: EdgeInsets.all(5),
+            margin: EdgeInsets.all(1),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              border: Border.all(width: 1, color: Colors.black12),
+            ),
+            child: massivImage, //через эту переменную сюда попадает картинка из массива
+          ),
+        ),
+        Positioned(
+          child: Container(
+            width: 100,
+            padding: EdgeInsets.all(5),
+            margin: EdgeInsets.all(1),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              border: Border.all(width: 1, color: Colors.black12),
+            ),
+            child: massivImage2, //через эту переменную сюда попадает картинка из массива
+          ),
+        ),
+      ],
     ),
-    //-------Логика проверки больше или меньше нажатая Норка - Начало---------------
-    onTap: () {
-      nNagimaniya++;
-      if(numberNorki==numRandom){
-        correct_answer = correct_answer + 1; //то добавляем единицу
-        correct_wrong = true; //присаиваем правильно
-        massivColorLevel1[n] = Colors.yellow; //присаиваем желтый - правильно
-      } else {
-        correct_wrong = false; //присаиваем неправильно
-        massivColorLevel1[n] = Colors.red; //присаиваем красный - неправильно
-      }
-      print("Нажал, ");
-      print("mouse= "); print(mouse);
-      print("isList= "); print(mouse);
-      print("n= "); print(n);
 
+
+    //-------Логика проверки  нажатая ячейка с цифрой - Начало---------------
+    onTap: () {
+      //выполнить логику нажатия кнопок
     },
-    //-------Логика проверки больше или меньше нажатая Норка - Конец---------------
+    //-------Логика проверки  нажатая ячейка с цифрой - Конец---------------
   );
 }
-//########Общий виджет строки с картинками норок- Конец-------
+//######## Общий виджет строки с клетками для цифр - Конец-------
 
-class _Level2State extends State<Level2> {
+class _Level3State extends State<Level3> {
   //--------Задаем ключи - Начало----------
   final _rowKey = GlobalKey<ScaffoldState>();
+
   //--------Задаем ключи - Конец----------
 
+
   //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-//++++++++Функция генерации цифр от 0 до 9 - Начало-------
+
+  //----------Создадим список-------------
+  List<int> massivNumberLevel3=new List(15);
+//  massivNumberLevel3 = new List.generate(15, (_)=>random.nextInt(15));
+
+//++++++++Функция генерации цифр от 0 до 14 - Начало-------
   void randomGenerator() {
-    numRandom = random.nextInt(10); //Генерируем цифры от 0 до 9
+    for (int i=0; i<15; i++){massivNumberLevel3[i]=random.nextInt(15);}
+
+//    numRandom = random.nextInt(10); //Генерируем цифры от 0 до 14
+//    massivNumberLevel3[0]=random.nextInt(15);
+
+    for(int i1=1; i1<15; i1++){
+      massivNumberLevel3[i1]=random.nextInt(15);
+
+      for(int i2=0; i2<15; i2++){
+        if(i1==i2){} else{
+          if(massivNumberLevel3[i1]!=massivNumberLevel3[i2] ){
+            print("i1= ${i1}, i2= ${i2}",);
+//          print(massivNumberLevel3[i1]);
+
+          }else{
+            massivNumberLevel3[i1]=random.nextInt(15);
+            print("iii1= ${i1}, iii2= ${i2}");
+          i2--;i1--;
+          }
+        }
+
+      }
+    }
+
+
   }
-//++++++++Функция генерации цифр от 0 до 9 - Конец-------
+//++++++++Функция генерации цифр от 0 до 14 - Конец-------
+
+
 
 //+++++++++++Функция При входе на данный уровень игры обращаемся через данную функцию к функции генерации случайных чисел randomLeftRight(); - Начало-------
 
@@ -169,8 +197,9 @@ class _Level2State extends State<Level2> {
   void initState() {
     super.initState();
     dischargeState();
+    randomGenerator();
     Timer(Duration(milliseconds: 50),(){
-      time_function1();
+//      time_function1();
     });
 
   }
@@ -183,12 +212,12 @@ class _Level2State extends State<Level2> {
     nNagimaniya=0;//Кол-во нажатий
     correct_answer = 0; //Кол-во правильных ответов
     correct_wrong = true; //правильно или неправильно
-    mouse=false;//при начале игры мышку не должно быть видно
+
     isList = true; //логич перемен для активации дополнительных кнопок
     SharedPreferences pref = await SharedPreferences.getInstance();
     proidenUroven=pref.getInt("Level_completed");//присваеваем переменной номер пройденного уровня
     for (int i = 0; i <= 19; i++) {
-      massivColorLevel1[i] = Colors.blueGrey;
+//      massivColorLevel1[i] = Colors.blueGrey;
     }
   }
 //+++++++++++Функция сброса переменных при начале игры - Конец+++++++++++++
@@ -215,41 +244,41 @@ class _Level2State extends State<Level2> {
   //++++++++Функция проверки сложности уровня - Конец-------
 
 //+++++++++++Функция здержки времени  - Начало------
-  Future time_function() async{
-    if (n<20){
-      setState(() {
-        print("n ");print(n);
-        Timer(Duration(seconds: 1),(){
-          n=n+1;
-          mouse=false;
-          randomGenerator();
-          time_function1();
-        });
-      });
-    }
-  }
-
-  Future time_function1() async{
-    setState(() {
-      massivColorLevel1[n]=Colors.blue;
-      if (n>=0 && massivColorLevel1[n-1]==Colors.blue){massivColorLevel1[n-1]=Colors.red;}
-      if (n>=20){//если n>=20, значит игра закончена
-        isList=false;//присваеваем ложь и выходят кнопки повторить или следующий уровень
-        if((n-correct_answer)<=level_of_difficulty){//если уровень пройден
-          _rowKey.currentState.showSnackBar(SnackBar(content: Text("Поздравляю!!! Уровень пройден. Вы поймали " + correct_answer.toString() + " мышек " + (n).toString())));
-          saveInMemory();// вызывем функцию сохранения пройденного уровеня в памяти телефона
-        }else{
-          _rowKey.currentState.showSnackBar(SnackBar(content: Text("Уровень не пройден!!! Вы поймали только " + correct_answer.toString() + " мышек из " + (n).toString())));
-        }
-      }else{
-        Timer(Duration(seconds: 2),(){
-          mouse=true;
-          time_function();
-        });
-      }
-
-    });
-  }
+//  Future time_function() async{
+//    if (n<20){
+//      setState(() {
+//        print("n ");print(n);
+//        Timer(Duration(seconds: 1),(){
+//          n=n+1;
+////          mouse=false;
+//          randomGenerator();
+//          time_function1();
+//        });
+//      });
+//    }
+//  }
+//
+//  Future time_function1() async{
+//    setState(() {
+////      massivColorLevel1[n]=Colors.blue;
+////      if (n>=0 && massivColorLevel1[n-1]==Colors.blue){massivColorLevel1[n-1]=Colors.red;}
+//      if (n>=20){//если n>=20, значит игра закончена
+//        isList=false;//присваеваем ложь и выходят кнопки повторить или следующий уровень
+//        if((n-correct_answer)<=level_of_difficulty){//если уровень пройден
+//          _rowKey.currentState.showSnackBar(SnackBar(content: Text("Поздравляю!!! Уровень пройден. Вы поймали " + correct_answer.toString() + " мышек " + (n).toString())));
+//          saveInMemory();// вызывем функцию сохранения пройденного уровеня в памяти телефона
+//        }else{
+//          _rowKey.currentState.showSnackBar(SnackBar(content: Text("Уровень не пройден!!! Вы поймали только " + correct_answer.toString() + " мышек из " + (n).toString())));
+//        }
+//      }else{
+//        Timer(Duration(seconds: 2),(){
+////          mouse=true;
+//          time_function();
+//        });
+//      }
+//
+//    });
+//  }
 
 //+++++++++++Функция здержки времени  - Конец------
 
@@ -261,13 +290,27 @@ class _Level2State extends State<Level2> {
     return Scaffold(
       key: _rowKey,
       body: Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          margin: EdgeInsets.all(0),
+          decoration: BoxDecoration(
+
+            //-----------Основной фон - Начало----------------------------------------
+              image: DecorationImage(
+                  image: Image.asset("assets/level1.jpg").image, //фоновое изображение контейнера
+                  fit: BoxFit.cover //растягивает н весь экраан
+              )),
+          //-----------Основной фон - Конец----------------------------------------
+
         child: Stack(
           children: <Widget>[
-            //-----------Фоновое изображение - Начало----------
-            Positioned(
-              child: Image.asset("assets/level1.jpg"),
-            ),
-            //-----------Фоновое изображение - Конец----------
+//            //-----------Фоновое изображение - Начало----------
+//
+//            Positioned(
+//              child: Image.asset("assets/level1.jpg"),
+//            ),
+//            //-----------Фоновое изображение - Конец----------
             Positioned(
               //----------Кнопка назад - Начало--------------
               top: top_Button_Nazad,
@@ -296,7 +339,7 @@ class _Level2State extends State<Level2> {
                   ),
                   onPressed: () {
                     setState(() {
-                      n=20;
+//                      n=20;
                     });
                     Navigator.push(context, MaterialPageRoute(builder: (context) => GameLivels()));
                   },
@@ -321,44 +364,44 @@ class _Level2State extends State<Level2> {
               ),
               //------------Наименование Уровня игры - Конец------------
             ),
-            Positioned(
-              //------------Полоса уровня - Начало---------------
-              top: top_Polosa,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.all(5),
-                margin: EdgeInsets.all(0),
-                child: Table(
-                  children: <TableRow>[
-                    TableRow(
-                      children: [
-                        gameLevel(massivColorLevel1[0]),
-                        gameLevel(massivColorLevel1[1]),
-                        gameLevel(massivColorLevel1[2]),
-                        gameLevel(massivColorLevel1[3]),
-                        gameLevel(massivColorLevel1[4]),
-                        gameLevel(massivColorLevel1[5]),
-                        gameLevel(massivColorLevel1[6]),
-                        gameLevel(massivColorLevel1[7]),
-                        gameLevel(massivColorLevel1[8]),
-                        gameLevel(massivColorLevel1[9]),
-                        gameLevel(massivColorLevel1[10]),
-                        gameLevel(massivColorLevel1[11]),
-                        gameLevel(massivColorLevel1[12]),
-                        gameLevel(massivColorLevel1[13]),
-                        gameLevel(massivColorLevel1[14]),
-                        gameLevel(massivColorLevel1[15]),
-                        gameLevel(massivColorLevel1[16]),
-                        gameLevel(massivColorLevel1[17]),
-                        gameLevel(massivColorLevel1[18]),
-                        gameLevel(massivColorLevel1[19]),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              //------------Полоса уровня - Конец---------------
-            ),
+//            Positioned(
+//              //------------Полоса уровня - Начало---------------
+//              top: top_Polosa,
+//              child: Container(
+//                width: MediaQuery.of(context).size.width,
+//                padding: EdgeInsets.all(5),
+//                margin: EdgeInsets.all(0),
+//                child: Table(
+//                  children: <TableRow>[
+//                    TableRow(
+//                      children: [
+//                        gameLevel(massivColorLevel1[0]),
+//                        gameLevel(massivColorLevel1[1]),
+//                        gameLevel(massivColorLevel1[2]),
+//                        gameLevel(massivColorLevel1[3]),
+//                        gameLevel(massivColorLevel1[4]),
+//                        gameLevel(massivColorLevel1[5]),
+//                        gameLevel(massivColorLevel1[6]),
+//                        gameLevel(massivColorLevel1[7]),
+//                        gameLevel(massivColorLevel1[8]),
+//                        gameLevel(massivColorLevel1[9]),
+//                        gameLevel(massivColorLevel1[10]),
+//                        gameLevel(massivColorLevel1[11]),
+//                        gameLevel(massivColorLevel1[12]),
+//                        gameLevel(massivColorLevel1[13]),
+//                        gameLevel(massivColorLevel1[14]),
+//                        gameLevel(massivColorLevel1[15]),
+//                        gameLevel(massivColorLevel1[16]),
+//                        gameLevel(massivColorLevel1[17]),
+//                        gameLevel(massivColorLevel1[18]),
+//                        gameLevel(massivColorLevel1[19]),
+//                      ],
+//                    ),
+//                  ],
+//                ),
+//              ),
+//              //------------Полоса уровня - Конец---------------
+//            ),
             Positioned(
               //-----------Контейнер с катринками - Начало---------------
               top: top_Contaner_Imags,
@@ -366,85 +409,37 @@ class _Level2State extends State<Level2> {
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.all(2),
                 margin: EdgeInsets.all(0),
-                child: mouse ?
+                child:
                 Table(
                   children: <TableRow>[
                     TableRow(
                       children: [
-                        tableRow((numRandom==0) ?_massivImageLevel2[1]:_massivImageLevel2[0],0),
-                        tableRow((numRandom==1) ?_massivImageLevel2[1]:_massivImageLevel2[0],1),
-                        tableRow(_massivImageLevel2[2],11),
-                        tableRow((numRandom==2) ?_massivImageLevel2[1]:_massivImageLevel2[0],2),
-                        tableRow(_massivImageLevel2[2],11),
+                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[0]], massivNumberLevel3[0],0),
+                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[1]], massivNumberLevel3[0],0),
+                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[2]], massivNumberLevel3[0],0),
+                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[3]], massivNumberLevel3[0],0),
+                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[4]], massivNumberLevel3[0],0),
                       ],
                     ),
                     TableRow(
                       children: [
-                        tableRow(_massivImageLevel2[2],11),
-                        tableRow(_massivImageLevel2[2],11),
-                        tableRow((numRandom==3) ?_massivImageLevel2[1]:_massivImageLevel2[0],3),
-                        tableRow((numRandom==4) ?_massivImageLevel2[1]:_massivImageLevel2[0],4),
-                        tableRow(_massivImageLevel2[2],11),
+                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[5]], massivNumberLevel3[0],0),
+                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[6]], massivNumberLevel3[0],0),
+                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[7]], massivNumberLevel3[0],0),
+                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[8]], massivNumberLevel3[0],0),
+                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[9]], massivNumberLevel3[0],0),
                       ],
                     ),
                     TableRow(
                       children: [
-                        tableRow((numRandom==5) ?_massivImageLevel2[1]:_massivImageLevel2[0],5),
-                        tableRow(_massivImageLevel2[2],11),
-                        tableRow(_massivImageLevel2[2],11),
-                        tableRow((numRandom==6) ?_massivImageLevel2[1]:_massivImageLevel2[0],6),
-                        tableRow((numRandom==7) ?_massivImageLevel2[1]:_massivImageLevel2[0],7),
+                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[10]], massivNumberLevel3[0],0),
+                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[11]], massivNumberLevel3[0],0),
+                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[12]], massivNumberLevel3[0],0),
+                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[13]], massivNumberLevel3[0],0),
+                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[14]], massivNumberLevel3[0],0),
                       ],
                     ),
-                    TableRow(
-                      children: [
-                        tableRow(_massivImageLevel2[2],11),
-                        tableRow((numRandom==8) ?_massivImageLevel2[1]:_massivImageLevel2[0],8),
-                        tableRow(_massivImageLevel2[2],11),
-                        tableRow((numRandom==9) ?_massivImageLevel2[1]:_massivImageLevel2[0],9),
-                        tableRow(_massivImageLevel2[2],11),
-                      ],
-                    ),
-                  ],
-                ):
-                Table(
-                  children: <TableRow>[
-                    TableRow(
-                      children: [
-                        tableRow(_massivImageLevel2[0],11),
-                        tableRow(_massivImageLevel2[0],11),
-                        tableRow(_massivImageLevel2[2],11),
-                        tableRow(_massivImageLevel2[0],11),
-                        tableRow(_massivImageLevel2[2],11),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        tableRow(_massivImageLevel2[2],11),
-                        tableRow(_massivImageLevel2[2],11),
-                        tableRow(_massivImageLevel2[0],11),
-                        tableRow(_massivImageLevel2[0],11),
-                        tableRow(_massivImageLevel2[2],11),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        tableRow(_massivImageLevel2[0],11),
-                        tableRow(_massivImageLevel2[2],11),
-                        tableRow(_massivImageLevel2[2],11),
-                        tableRow(_massivImageLevel2[0],11),
-                        tableRow(_massivImageLevel2[0],11),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        tableRow(_massivImageLevel2[2],11),
-                        tableRow(_massivImageLevel2[0],11),
-                        tableRow(_massivImageLevel2[2],11),
-                        tableRow(_massivImageLevel2[0],11),
-                        tableRow(_massivImageLevel2[2],11),
-                      ],
-                    ),
+
                   ],
                 ),
               ),
@@ -485,12 +480,12 @@ class _Level2State extends State<Level2> {
                                   borderRadius: BorderRadius.all(Radius.circular(10)),
                                   //border: Border.all(width: 1, color: Colors.black12),
                                 ),
-                                child: Text(
-                                  massivColorLevel1[n-1]==Colors.yellow ?"Поймал": "Не поймал",
-                                  textScaleFactor: 1.5,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: massivColorLevel1[n-1]==Colors.yellow ?Colors.white:Colors.red),
-                                ),
+//                                child: Text(
+//                                  massivColorLevel1[n-1]==Colors.yellow ?"Поймал": "Не поймал",
+//                                  textScaleFactor: 1.5,
+//                                  textAlign: TextAlign.center,
+//                                  style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: massivColorLevel1[n-1]==Colors.yellow ?Colors.white:Colors.red),
+//                                ),
                               ),
                               //-----------Контейнер с текстом под картинками - Конец---------------
                             ],
@@ -543,7 +538,7 @@ class _Level2State extends State<Level2> {
                                   ),
                                   onPressed: () {
                                     dischargeState(); //вызываем функцию сброса данных для логики
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Level2()));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Level3()));
                                   },
                                 ),
                                 //--------Кнопка "Повторить" - Конец--------------
@@ -588,7 +583,7 @@ class _Level2State extends State<Level2> {
                                   ),
                                   onPressed: () {
                                     dischargeState(); //вызываем функцию сброса данных для логики
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Level2()));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Level3()));
                                   },
                                 ),
                                 //--------Кнопка "Следующий уровень" - Конец--------------
@@ -602,6 +597,7 @@ class _Level2State extends State<Level2> {
                   ),
           ],
         ),
+      ),
       ),
     );
   }
