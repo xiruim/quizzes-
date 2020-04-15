@@ -23,10 +23,11 @@ String text = ""; //пустой текск в полосе пройденног
 int numRandom; //Переменная для генерации случайных чисел
 int proidenUroven;//Пройденный уровень
 int nNagimaniya=0;//переменная увеличения при последовательном нажатии цифр
-int j0,j1,j2,j3,j4,j5,j6,j7,j8,j9,j10,j11,j12,j13,j14;//переменные для размещения цифр на поле
+//int j0,j1,j2,j3,j4,j5,j6,j7,j8,j9,j10,j11,j12,j13,j14;//переменные для размещения цифр на поле
 
 Random random = new Random(); //Для генерации случайных чисел
 int n = 0; //Учавствует в цикле из 20 задний
+int proverka_num=0;//Учавствует в проверке цифр
 //int nNagimaniya=0;//Кол-во нажатий
 int correct_answer = 0; //Кол-во правильных ответов
 bool correct_wrong = true; //правильно или непарвильно
@@ -53,24 +54,49 @@ double left_Button_Nazad = 10.0; //Начальное положение кно�
 double left_Level_text = 200; //Начальное положение кнопки "НАЗАД" от левого края
 //--------Переменные размещения на экране - Конец--------
 
+//----------Создадим список-------------
+List<int> massivNumberLevel3=new List(15);
+//  massivNumberLevel3 = new List.generate(15, (_)=>random.nextInt(15));
+//++++++++Функция генерации цифр от 0 до 14 - Начало-------
+void randomGenerator() {
+  for (int i=0; i<15; i++){massivNumberLevel3[i]=random.nextInt(15);}
+  for(int i1=1; i1<15; i1++){
+    massivNumberLevel3[i1]=random.nextInt(15);
+    for(int i2=0; i2<15; i2++){
+      if(i1==i2){} else{
+        if(massivNumberLevel3[i1]!=massivNumberLevel3[i2] ){
+          print("i1= ${i1}, i2= ${i2}",);
+//          print(massivNumberLevel3[i1]);
+        }else{
+          massivNumberLevel3[i1]=random.nextInt(15);
+          print("iii1= ${i1}, iii2= ${i2}");
+          i2--;i1--;
+        }
+      }
+    }
+  }
+}
+//++++++++Функция генерации цифр от 0 до 14 - Конец-------
+
+
 //========================================================================================================//
 //=========Массив с картинками типа ХЕШ-коллекции набор пар ключ-значение - Начало-------
 var _massivImageLevel3 = {
-  0: Image.asset("assets/img_level3/0.png"),
-  1: Image.asset("assets/img_level3/1.png"),
-  2: Image.asset("assets/img_level3/2.png"),
-  3: Image.asset("assets/img_level3/3.png"),
-  4: Image.asset("assets/img_level3/4.png"),
-  5: Image.asset("assets/img_level3/5.png"),
-  6: Image.asset("assets/img_level3/6.png"),
-  7: Image.asset("assets/img_level3/7.png"),
-  8: Image.asset("assets/img_level3/8.png"),
-  9: Image.asset("assets/img_level3/9.png"),
-  10: Image.asset("assets/img_level3/10.png"),
-  11: Image.asset("assets/img_level3/11.png"),
-  12: Image.asset("assets/img_level3/12.png"),
-  13: Image.asset("assets/img_level3/13.png"),
-  14: Image.asset("assets/img_level3/14.png"),
+  0: Image.asset("assets/img_level3/1.png"),
+  1: Image.asset("assets/img_level3/2.png"),
+  2: Image.asset("assets/img_level3/3.png"),
+  3: Image.asset("assets/img_level3/4.png"),
+  4: Image.asset("assets/img_level3/5.png"),
+  5: Image.asset("assets/img_level3/6.png"),
+  6: Image.asset("assets/img_level3/7.png"),
+  7: Image.asset("assets/img_level3/8.png"),
+  8: Image.asset("assets/img_level3/9.png"),
+  9: Image.asset("assets/img_level3/10.png"),
+  10: Image.asset("assets/img_level3/11.png"),
+  11: Image.asset("assets/img_level3/12.png"),
+  12: Image.asset("assets/img_level3/13.png"),
+  13: Image.asset("assets/img_level3/14.png"),
+  14: Image.asset("assets/img_level3/15.png"),
   15: Image.asset("assets/img_level3/of.png"),//не активная ячейка с цифрой
   16: Image.asset("assets/img_level3/on.png"),//активная ячейка с цифрой, т.е. правильно нажатая
 };
@@ -101,50 +127,6 @@ var _massivImageLevel3 = {
 //##################################### Виджеты ###################################################//
 
 
-//######## Общий виджет строки с клетками для цифр - Начало-------
-@override
-Widget tableRow(
-  massivImage, massivImage2, massivNumber, int numberCell,
-) {
-  return InkWell(
-    child: Stack (
-      children: <Widget>[
-        Positioned(
-          child: Container(
-            width: 100,
-            padding: EdgeInsets.all(5),
-            margin: EdgeInsets.all(1),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              border: Border.all(width: 1, color: Colors.black12),
-            ),
-            child: massivImage, //через эту переменную сюда попадает картинка из массива
-          ),
-        ),
-        Positioned(
-          child: Container(
-            width: 100,
-            padding: EdgeInsets.all(5),
-            margin: EdgeInsets.all(1),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              border: Border.all(width: 1, color: Colors.black12),
-            ),
-            child: massivImage2, //через эту переменную сюда попадает картинка из массива
-          ),
-        ),
-      ],
-    ),
-
-
-    //-------Логика проверки  нажатая ячейка с цифрой - Начало---------------
-    onTap: () {
-      //выполнить логику нажатия кнопок
-    },
-    //-------Логика проверки  нажатая ячейка с цифрой - Конец---------------
-  );
-}
-//######## Общий виджет строки с клетками для цифр - Конец-------
 
 class _Level3State extends State<Level3> {
   //--------Задаем ключи - Начало----------
@@ -152,43 +134,71 @@ class _Level3State extends State<Level3> {
 
   //--------Задаем ключи - Конец----------
 
+  //######## Общий виджет строки с клетками для цифр - Начало-------
+  @override
+  Widget tableRow(
+      massivImage, massivImage2, massivNumber, int numberCell,
+      ) {
+    return InkWell(
+      child: Stack (
+        children: <Widget>[
+          Positioned(
+            child: Container(
+              width: 100,
+              padding: EdgeInsets.all(5),
+              margin: EdgeInsets.all(1),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                border: Border.all(width: 1, color: Colors.black12),
+              ),
+              child: massivImage, //через эту переменную сюда попадает картинка из массива
+            ),
+          ),
+          Positioned(
+            child: Container(
+              width: 100,
+              padding: EdgeInsets.all(5),
+              margin: EdgeInsets.all(1),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                border: Border.all(width: 1, color: Colors.black12),
+              ),
+              child: massivImage2, //через эту переменную сюда попадает картинка из массива
+            ),
+          ),
+        ],
+      ),
+
+
+      //-------Логика проверки  нажатая ячейка с цифрой - Начало---------------
+      onTap: () {
+        //выполнить логику нажатия кнопок
+        if(proverka_num==massivNumberLevel3[numberCell]){
+
+          najatie(numberCell);
+          proverka_num++;
+          print("кнопка нажата правильно");
+        }else{print("кнопка нажата Неправильно, проверка номера=${proverka_num}, массив=${massivNumber}");}
+      },
+      //-------Логика проверки  нажатая ячейка с цифрой - Конец---------------
+    );
+  }
+//######## Общий виджет строки с клетками для цифр - Конец-------
+
+
 
   //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-  //----------Создадим список-------------
-  List<int> massivNumberLevel3=new List(15);
-//  massivNumberLevel3 = new List.generate(15, (_)=>random.nextInt(15));
+//+++++++++++Функция при проверке правильности нажатия - Начало-------
 
-//++++++++Функция генерации цифр от 0 до 14 - Начало-------
-  void randomGenerator() {
-    for (int i=0; i<15; i++){massivNumberLevel3[i]=random.nextInt(15);}
-
-//    numRandom = random.nextInt(10); //Генерируем цифры от 0 до 14
-//    massivNumberLevel3[0]=random.nextInt(15);
-
-    for(int i1=1; i1<15; i1++){
-      massivNumberLevel3[i1]=random.nextInt(15);
-
-      for(int i2=0; i2<15; i2++){
-        if(i1==i2){} else{
-          if(massivNumberLevel3[i1]!=massivNumberLevel3[i2] ){
-            print("i1= ${i1}, i2= ${i2}",);
-//          print(massivNumberLevel3[i1]);
-
-          }else{
-            massivNumberLevel3[i1]=random.nextInt(15);
-            print("iii1= ${i1}, iii2= ${i2}");
-          i2--;i1--;
-          }
-        }
-
-      }
-    }
-
-
+  @override
+  void najatie(int numberCell) async{
+    setState(() {
+      numRandom=massivNumberLevel3[numberCell];
+    });
   }
-//++++++++Функция генерации цифр от 0 до 14 - Конец-------
 
+//+++++++++++Функция при проверке правильности нажатия - Начало-------
 
 
 //+++++++++++Функция При входе на данный уровень игры обращаемся через данную функцию к функции генерации случайных чисел randomLeftRight(); - Начало-------
@@ -212,6 +222,8 @@ class _Level3State extends State<Level3> {
     nNagimaniya=0;//Кол-во нажатий
     correct_answer = 0; //Кол-во правильных ответов
     correct_wrong = true; //правильно или неправильно
+    proverka_num=0;
+    numRandom=-1;
 
     isList = true; //логич перемен для активации дополнительных кнопок
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -338,9 +350,11 @@ class _Level3State extends State<Level3> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                   ),
                   onPressed: () {
-                    setState(() {
-//                      n=20;
-                    });
+                    dischargeState();
+                    randomGenerator();
+//                    setState(() {
+////                      n=20;
+//                    });
                     Navigator.push(context, MaterialPageRoute(builder: (context) => GameLivels()));
                   },
                 ),
@@ -414,29 +428,29 @@ class _Level3State extends State<Level3> {
                   children: <TableRow>[
                     TableRow(
                       children: [
-                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[0]], massivNumberLevel3[0],0),
-                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[1]], massivNumberLevel3[0],0),
-                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[2]], massivNumberLevel3[0],0),
-                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[3]], massivNumberLevel3[0],0),
-                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[4]], massivNumberLevel3[0],0),
+                        tableRow((numRandom==massivNumberLevel3[0]) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[0]], massivNumberLevel3[0],0),
+                        tableRow((numRandom==massivNumberLevel3[1]) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[1]], massivNumberLevel3[0],1),
+                        tableRow((numRandom==massivNumberLevel3[2]) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[2]], massivNumberLevel3[0],2),
+                        tableRow((numRandom==massivNumberLevel3[3]) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[3]], massivNumberLevel3[0],3),
+                        tableRow((numRandom==massivNumberLevel3[4]) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[4]], massivNumberLevel3[0],4),
                       ],
                     ),
                     TableRow(
                       children: [
-                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[5]], massivNumberLevel3[0],0),
-                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[6]], massivNumberLevel3[0],0),
-                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[7]], massivNumberLevel3[0],0),
-                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[8]], massivNumberLevel3[0],0),
-                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[9]], massivNumberLevel3[0],0),
+                        tableRow((numRandom==massivNumberLevel3[5]) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[5]], massivNumberLevel3[0],5),
+                        tableRow((numRandom==massivNumberLevel3[6]) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[6]], massivNumberLevel3[0],6),
+                        tableRow((numRandom==massivNumberLevel3[7]) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[7]], massivNumberLevel3[0],7),
+                        tableRow((numRandom==massivNumberLevel3[8]) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[8]], massivNumberLevel3[0],8),
+                        tableRow((numRandom==massivNumberLevel3[9]) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[9]], massivNumberLevel3[0],9),
                       ],
                     ),
                     TableRow(
                       children: [
-                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[10]], massivNumberLevel3[0],0),
-                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[11]], massivNumberLevel3[0],0),
-                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[12]], massivNumberLevel3[0],0),
-                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[13]], massivNumberLevel3[0],0),
-                        tableRow((numRandom==0) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[14]], massivNumberLevel3[0],0),
+                        tableRow((numRandom==massivNumberLevel3[10]) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[10]], massivNumberLevel3[0],10),
+                        tableRow((numRandom==massivNumberLevel3[11]) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[11]], massivNumberLevel3[0],11),
+                        tableRow((numRandom==massivNumberLevel3[12]) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[12]], massivNumberLevel3[0],12),
+                        tableRow((numRandom==massivNumberLevel3[13]) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[13]], massivNumberLevel3[0],13),
+                        tableRow((numRandom==massivNumberLevel3[14]) ?_massivImageLevel3[16]:_massivImageLevel3[15], _massivImageLevel3[massivNumberLevel3[14]], massivNumberLevel3[0],14),
                       ],
                     ),
 
