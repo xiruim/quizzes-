@@ -56,25 +56,35 @@ double left_Level_text = 200; //Начальное положение кнопк
 
 //----------Создадим список-------------
 List<int> massivNumberLevel3=new List(15);
+
 //  massivNumberLevel3 = new List.generate(15, (_)=>random.nextInt(15));
 //++++++++Функция генерации цифр от 0 до 14 - Начало-------
 void randomGenerator() {
-  for (int i=0; i<15; i++){massivNumberLevel3[i]=random.nextInt(15);}
+  int i=0;int i1=1;int i2=0;
+  massivNumberLevel3[0]=random.nextInt(15);
+
+//  for (int i=0; i<15; i++){massivNumberLevel3[i]=random.nextInt(15);}
+//  for (int i=0; i<15; i++){print(massivNumberLevel3[i]);}
   for(int i1=1; i1<15; i1++){
-    massivNumberLevel3[i1]=random.nextInt(15);
-    for(int i2=0; i2<15; i2++){
-      if(i1==i2){} else{
-        if(massivNumberLevel3[i1]!=massivNumberLevel3[i2] ){
-          print("i1= ${i1}, i2= ${i2}",);
+    try {
+      massivNumberLevel3[i1]=random.nextInt(15);
+      for(int i2=0; i2<15; i2++){
+        if(i1==i2){} else{
+          if(massivNumberLevel3[i1]!=massivNumberLevel3[i2] ){
+//          print("i1= ${i1}, i2= ${i2}",);
 //          print(massivNumberLevel3[i1]);
-        }else{
-          massivNumberLevel3[i1]=random.nextInt(15);
-          print("iii1= ${i1}, iii2= ${i2}");
-          i2--;i1--;
+          }else{
+            massivNumberLevel3[i1]=random.nextInt(15);
+//          print("iii1= ${i1}, iii2= ${i2}");
+            i2--;i1--;
+          }
         }
       }
-    }
+    } catch (_){
+      print("i= ${i}, i1= ${i1},  i21= ${i2}");}
+
   }
+  print("i= ${i}, i1= ${i1},  i21= ${i2}");
 }
 //++++++++Функция генерации цифр от 0 до 14 - Конец-------
 
@@ -208,9 +218,9 @@ class _Level3State extends State<Level3> {
     super.initState();
     dischargeState();
     randomGenerator();
-    Timer(Duration(milliseconds: 50),(){
+//    Timer(Duration(milliseconds: 50),(){
 //      time_function1();
-    });
+//    });
 
   }
 //+++++++++++Функция При входе на данный уровень игры обращаемся через данную функцию к функции генерации случайных чисел randomLeftRight(); - Конец-------
@@ -228,9 +238,9 @@ class _Level3State extends State<Level3> {
     isList = true; //логич перемен для активации дополнительных кнопок
     SharedPreferences pref = await SharedPreferences.getInstance();
     proidenUroven=pref.getInt("Level_completed");//присваеваем переменной номер пройденного уровня
-    for (int i = 0; i <= 19; i++) {
-//      massivColorLevel1[i] = Colors.blueGrey;
-    }
+//    for (int i = 0; i <= 19; i++) {
+////      massivColorLevel1[i] = Colors.blueGrey;
+//    }
   }
 //+++++++++++Функция сброса переменных при начале игры - Конец+++++++++++++
 
@@ -351,7 +361,7 @@ class _Level3State extends State<Level3> {
                   ),
                   onPressed: () {
                     dischargeState();
-                    randomGenerator();
+                    for (int i=0; i<15; i++){massivNumberLevel3[i]=random.nextInt(15);}
 //                    setState(() {
 ////                      n=20;
 //                    });
