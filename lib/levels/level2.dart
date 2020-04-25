@@ -140,10 +140,10 @@ Widget tableRow(
         correct_wrong = false; //присаиваем неправильно
         massivColorLevel1[n] = Colors.red; //присаиваем красный - неправильно
       }
-      print("Нажал, ");
-      print("mouse= "); print(mouse);
-      print("isList= "); print(mouse);
-      print("n= "); print(n);
+//      print("Нажал, ");
+//      print("mouse= "); print(mouse);
+//      print("isList= "); print(mouse);
+      print("nn= ${n}");
 
     },
     //-------Логика проверки больше или меньше нажатая Норка - Конец---------------
@@ -169,6 +169,7 @@ class _Level2State extends State<Level2> {
   void initState() {
     super.initState();
     dischargeState();
+    slognostLevel();
     Timer(Duration(milliseconds: 50),(){
       time_function1();
     });
@@ -218,7 +219,7 @@ class _Level2State extends State<Level2> {
   Future time_function() async{
     if (n<20){
       setState(() {
-        print("n ");print(n);
+        print("n= ${n} ");
         Timer(Duration(seconds: 1),(){
           n=n+1;
           mouse=false;
