@@ -35,6 +35,7 @@ bool correct_wrong = true; //правильно или непарвильно
 
 bool isList = true; //логич перемен для активации дополнительных кнопок
 bool stopTimer = true; //логич перемен для счетчика времени
+bool boolRecord=false;//логич перемен для рекорда
 double timeGame = 0; //переменная для посчета времени игры
 int milliSecundi, milliSecundiRecord = 0; //переменная для посчета и вывода времени игры
 int secundi, secundRecord = 0; //переменная для посчета и вывода времени игры
@@ -64,7 +65,9 @@ double left_Level_text = 200; //Начальное положение кнопк
 List<int> massivNumberLevel3 = new List(15);
 
 //  massivNumberLevel3 = new List.generate(15, (_)=>random.nextInt(15));
-//++++++++Функция генерации цифр от 0 до 14 - Начало-------
+
+
+//++++++++Функция генерации цифр от 0 до 14 для заполнения поля в хаотичном порядке - Начало-------
 void randomGenerator() async {
   int i = 0;
   int i1 = 1;
@@ -91,12 +94,12 @@ void randomGenerator() async {
         }
       }
     } catch (_) {
-      print("i= ${i}, i1= ${i1},  i21= ${i2}");
+//      print("i= ${i}, i1= ${i1},  i21= ${i2}");
     }
   }
-  print("i= ${i}, i1= ${i1},  i21= ${i2}");
+//  print("i= ${i}, i1= ${i1},  i21= ${i2}");
 }
-//++++++++Функция генерации цифр от 0 до 14 - Конец-------
+//++++++++Функция генерации цифр от 0 до 14 для заполнения поля в хаотичном порядке - Конец-------
 
 //========================================================================================================//
 //=========Массив с картинками типа ХЕШ-коллекции набор пар ключ-значение - Начало-------
@@ -173,9 +176,9 @@ class _Level3State extends State<Level3> {
         if (proverka_num == massivNumberLevel3[numberCell]) {
           najatie(numberCell);
           proverka_num++;
-          print("кнопка нажата правильно");
+//          print("кнопка нажата правильно");
         } else {
-          print("кнопка нажата Неправильно, проверка номера=${proverka_num}, массив=${massivNumber}");
+//          print("кнопка нажата Неправильно, проверка номера=${proverka_num}, массив=${massivNumber}");
         }
       },
       //-------Логика проверки  нажатая ячейка с цифрой - Конец---------------
@@ -185,30 +188,38 @@ class _Level3State extends State<Level3> {
 
   //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-//+++++++++++Функция при проверке правильности нажатия - Начало-------
+//+++++++++++Функция проверки правильности нажатия и Рекорда - Начало-------
 
   @override
   void najatie(int numberCell) async {
     setState(() {
+      print("Нажатие");
       stopTimer = true;
       numRandom = massivNumberLevel3[numberCell];
       if (numRandom == 14) {
+//        print("Соптаймер");
         stopTimer = false;
         if(milliSecundi<milliSecundiRecord){
-          if(secundi<secundRecord){
-            if(minuti<minutRecord){
-              saveRecordInMemory();
+//          print("Функция проверки правильности нажатия и Рекорда миллисек=${minutRecord}");
+          if(secundi<=secundRecord){
+//            print("Функция проверки правильности нажатия и Рекорда секунды=${secundRecord}");
+            if(minuti<=minutRecord){
+//              print("Функция проверки правильности нажатия и Рекорда минуты=${minutRecord}");
               minutRecord=minuti;
               secundRecord=secundi;
               milliSecundiRecord=milliSecundi;
+              saveRecordInMemory();
+              boolRecord=true;
+              isList=false;
             }
           }
+          isList=false;
         }
       }
     });
   }
 
-//+++++++++++Функция при проверке правильности нажатия - Начало-------
+//+++++++++++Функция проверки правильности нажатия и Рекорда - Начало-------
 
 //+++++++++++Функция При входе на данный уровень игры обращаемся через данную функцию к функции генерации случайных чисел randomLeftRight(); - Начало-------
 
@@ -236,6 +247,8 @@ class _Level3State extends State<Level3> {
     milliSecundi = secundi = minuti = 0;
 
     isList = true; //логич перемен для активации дополнительных кнопок
+    boolRecord=false;// готовим для следующего рекорда
+    stopTimer = true;//для начала отсчета времени при повторе игры
     SharedPreferences pref = await SharedPreferences.getInstance();
     proidenUroven = pref.getInt("Level_completed"); //присваеваем переменной номер пройденного уровня
 
@@ -286,7 +299,7 @@ class _Level3State extends State<Level3> {
 
 //+++++++++++Функция сохранения рекорда в памяти телефона - Конец----------------
 
-//+++++++++++Функция здержки времени  - Начало------
+//+++++++++++Функция подсчета времени игры и подготовка миллисек, секунд, минут  - Начало------
   Future time_function() async {
     setState(() {
       if (stopTimer == true) {
@@ -308,7 +321,7 @@ class _Level3State extends State<Level3> {
     });
   }
 
-//+++++++++++Функция здержки времени  - Конец------
+//+++++++++++Функция подсчета времени игры и подготовка миллисек, секунд, минут - Конец------
 
   //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX//
   @override
@@ -452,14 +465,22 @@ class _Level3State extends State<Level3> {
                               borderRadius: BorderRadius.all(Radius.circular(10)),
                               //border: Border.all(width: 1, color: Colors.black12),
                             ),
-                            child: Text(
+                            child: !boolRecord ? Text(
 //                                  timeGame.toString(),
 //                                  minuti.toString(),
                               "$minuti. $secundi. $milliSecundi", //выводим таймер игры
                               textScaleFactor: 1.5,
                               textAlign: TextAlign.center,
                               style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
-                            ),
+                            ):
+                            Text(
+//                                  timeGame.toString(),
+//                                  minuti.toString(),
+                              "$minuti. $secundi. $milliSecundi - Новый рекорд", //выводим таймер игры
+                              textScaleFactor: 1.5,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
+                            )
                           ),
                           Container(
                             width: MediaQuery.of(context).size.width,
@@ -499,15 +520,6 @@ class _Level3State extends State<Level3> {
                                     style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                                   ),
                                 ),
-//                                Container(
-//                                  width: MediaQuery.of(context).size.width,
-//                                  padding: EdgeInsets.all(5),
-//                                  margin: EdgeInsets.all(1),
-//                                  decoration: BoxDecoration(
-//                                    borderRadius: BorderRadius.all(Radius.circular(10)),
-//                                    //border: Border.all(width: 1, color: Colors.black12),
-//                                  ),
-//                                ),
                                 //-----------Контейнер с текстом под картинками - Конец---------------
                               ],
                             ),
