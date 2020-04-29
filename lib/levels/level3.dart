@@ -41,6 +41,7 @@ int milliSecundi, milliSecundiRecord = 0; //переменная для посч
 int secundi, secundRecord = 0; //переменная для посчета и вывода времени игры
 int minuti, minutRecord = 0; //переменная для посчета и вывода времени игры
 int level_of_difficulty; //уровень сложности игры (1, 2 или 3)
+int minutiSlojnosti;//в зависимости от уровня сложности минимальное время за которое надо пройти уровень
 //--------Переменные для логики - Конец---------
 
 //--------Переменные размещения на экране - Начало--------
@@ -215,6 +216,7 @@ class _Level3State extends State<Level3> {
           }
           isList=false;
         }
+        if(minuti<minutiSlojnosti)
       }
     });
   }
@@ -460,7 +462,7 @@ class _Level3State extends State<Level3> {
                           Container(
                             width: MediaQuery.of(context).size.width,
                             padding: EdgeInsets.all(5),
-                            margin: EdgeInsets.all(1),
+                            margin: EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.all(Radius.circular(10)),
                               //border: Border.all(width: 1, color: Colors.black12),
@@ -470,27 +472,27 @@ class _Level3State extends State<Level3> {
 //                                  minuti.toString(),
                               "$minuti. $secundi. $milliSecundi", //выводим таймер игры
                               textScaleFactor: 1.5,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
+                              textAlign: TextAlign.start,
+                              style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white70),
                             ):
                             Text(
 //                                  timeGame.toString(),
 //                                  minuti.toString(),
                               "$minuti. $secundi. $milliSecundi - Новый рекорд", //выводим таймер игры
                               textScaleFactor: 1.5,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
+                              textAlign: TextAlign.start,
+                              style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white70),
                             )
                           ),
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.all(5),
-                            margin: EdgeInsets.all(1),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              //border: Border.all(width: 1, color: Colors.black12),
-                            ),
-                          ),
+//                          Container(
+//                            width: MediaQuery.of(context).size.width,
+//                            padding: EdgeInsets.all(5),
+//                            margin: EdgeInsets.all(1),
+//                            decoration: BoxDecoration(
+//                              borderRadius: BorderRadius.all(Radius.circular(10)),
+//                              //border: Border.all(width: 1, color: Colors.black12),
+//                            ),
+//                          ),
                         ])
                       ]))),
               isList
@@ -508,7 +510,7 @@ class _Level3State extends State<Level3> {
                                 Container(
                                   width: MediaQuery.of(context).size.width,
                                   padding: EdgeInsets.all(5),
-                                  margin: EdgeInsets.all(1),
+                                  margin: EdgeInsets.all(10),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.all(Radius.circular(10)),
                                     //border: Border.all(width: 1, color: Colors.black12),
@@ -516,7 +518,7 @@ class _Level3State extends State<Level3> {
                                   child: Text(
                                     "$minutRecord. $secundRecord. $minutRecord - Рекорд", //выводим таймер игры
                                     textScaleFactor: 1.5,
-                                    textAlign: TextAlign.center,
+                                    textAlign: TextAlign.start,
                                     style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                                   ),
                                 ),
@@ -609,7 +611,7 @@ class _Level3State extends State<Level3> {
                                           elevation: 0.0, //убераем тень
                                           color: Colors.transparent,
                                           child: Text(
-                                            "Уровень не пройден",
+                                            "Слишком долго - Уровень не пройден",
                                             textScaleFactor: 1.0,
                                             textAlign: TextAlign.center,
                                             style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.red),
