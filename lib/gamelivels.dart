@@ -72,6 +72,7 @@ class _GameLivelsState extends State<GameLivels> {
   void checkLevel() async{
     SharedPreferences pref=await SharedPreferences.getInstance();
     check=pref.getInt("Level_completed");//присваеваем переменной номер пройденного уровня
+//    check=3;//это если при отладке мы хотим поменять уровень игры
     if (check==0){check=1;}
     for(int i=0; i<=29; i++){
       if(i<check){

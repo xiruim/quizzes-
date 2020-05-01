@@ -211,12 +211,18 @@ class _Level3State extends State<Level3> {
               milliSecundiRecord=milliSecundi;
               saveRecordInMemory();
               boolRecord=true;
-              isList=false;
+//              isList=false;
             }
           }
-          isList=false;
+
         }
-        if(minuti<minutiSlojnosti)
+        isList=false;
+        if(secundi<minutiSlojnosti){
+          saveInMemory();
+          print("Функция проверки правильности нажатия и Рекорда переход на следующий уровень proidenUroven =${proidenUroven} nameLevelInt=${nameLevelInt}");
+        }else{
+          print("Функция проверки правильности нажатия и Рекорда не переход на следующий уровень proidenUroven =${proidenUroven} nameLevelInt=${nameLevelInt}");
+        }
       }
     });
   }
@@ -247,6 +253,7 @@ class _Level3State extends State<Level3> {
     proverka_num = 0;
     numRandom = -1;
     milliSecundi = secundi = minuti = 0;
+    minutiSlojnosti=level_of_difficulty;//присваиваем минимальное время за которое надо пройти уровень (зависит от уровня сложности, можно поменять формулу присвоения)
 
     isList = true; //логич перемен для активации дополнительных кнопок
     boolRecord=false;// готовим для следующего рекорда
@@ -547,7 +554,8 @@ class _Level3State extends State<Level3> {
                         child: Table(
                           children: <TableRow>[
                             TableRow(
-                              children: [
+                              children: proidenUroven == nameLevelInt
+                              ?[
                                 Container(
                                   //--------Кнопка "Повторить" - Начало--------------
                                   width: width_Button_Nazad,
@@ -592,8 +600,7 @@ class _Level3State extends State<Level3> {
                                     ),
                                     borderRadius: BorderRadius.all(Radius.circular(20)),
                                   ),
-                                  child: proidenUroven == nameLevelInt
-                                      ? RaisedButton(
+                                  child:  RaisedButton(
                                           elevation: 0.0, //убераем тень
                                           color: Colors.transparent,
                                           child: Text(
@@ -606,25 +613,46 @@ class _Level3State extends State<Level3> {
                                             dischargeState(); //вызываем функцию сброса данных для логики
                                             Navigator.push(context, MaterialPageRoute(builder: (context) => GameLivels()));
                                           },
-                                        )
-                                      : RaisedButton(
-                                          elevation: 0.0, //убераем тень
-                                          color: Colors.transparent,
-                                          child: Text(
-                                            "Слишком долго - Уровень не пройден",
-                                            textScaleFactor: 1.0,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.red),
-                                          ),
-                                          onPressed: () {
-                                            dischargeState(); //вызываем функцию сброса данных для логики
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => Level3()));
-                                          },
                                         ),
                                   //--------Кнопка "Следующий уровень" - Конец--------------
                                 ),
                                 //-----------Появляющийся Контейнер с окончнием игры - Конец---------------
-                              ],
+                              ]
+                              :
+                              [
+                                Container(
+                                  //--------Кнопка "Уровень не пройден" - Начало--------------
+                                  width: width_Button_Nazad,
+                                  height: height_Button_Nazad,
+                                  padding: EdgeInsets.all(5),
+                                  margin: EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 2,
+                                    ),
+                                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                                  ),
+                                  child: RaisedButton(
+                                    elevation: 0.0, //убераем тень
+                                    color: Colors.transparent,
+                                    child: Text(
+                                      "Уровень не пройден - Давай дружок попробуем немного побыстрее",
+                                      textScaleFactor: 1.0,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.yellow),
+                                    ),
+                                    onPressed: () {
+                                      dischargeState(); //вызываем функцию сброса данных для логики
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => Level3()));
+                                    },
+                                  ),
+                                  //--------Кнопка "Уровень не пройден" - Конец--------------
+                                ),
+                                //-----------Появляющийся Контейнер с окончнием игры - Конец---------------
+                              ]
+                              ,
                             ),
                           ],
                         ),
