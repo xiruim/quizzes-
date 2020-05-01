@@ -36,6 +36,7 @@ bool correct_wrong = true; //правильно или непарвильно
 bool isList = true; //логич перемен для активации дополнительных кнопок
 bool stopTimer = true; //логич перемен для счетчика времени
 bool boolRecord=false;//логич перемен для рекорда
+bool boolProxojdeniyaUrovnya=false;//логич перемен для прохождения уровня
 double timeGame = 0; //переменная для посчета времени игры
 int milliSecundi, milliSecundiRecord = 0; //переменная для посчета и вывода времени игры
 int secundi, secundRecord = 0; //переменная для посчета и вывода времени игры
@@ -198,31 +199,38 @@ class _Level3State extends State<Level3> {
       stopTimer = true;
       numRandom = massivNumberLevel3[numberCell];
       if (numRandom == 14) {
-//        print("Соптаймер");
-        stopTimer = false;
+        print("Соптаймер");
+        stopTimer = false;//останавливаем время игры - игра заканчивается
+        //----------далее проверяем новый рекорд, т.е. сравниваем предидущий рекорд и в лучае если время меньше записываем новый рекорд - Начало----
         if(milliSecundi<milliSecundiRecord){
-//          print("Функция проверки правильности нажатия и Рекорда миллисек=${minutRecord}");
+          print("Функция проверки правильности нажатия и Рекорда миллисек=${minutRecord}");
           if(secundi<=secundRecord){
-//            print("Функция проверки правильности нажатия и Рекорда секунды=${secundRecord}");
+            print("Функция проверки правильности нажатия и Рекорда секунды=${secundRecord}");
             if(minuti<=minutRecord){
-//              print("Функция проверки правильности нажатия и Рекорда минуты=${minutRecord}");
+              print("Функция проверки правильности нажатия и Рекорда минуты=${minutRecord}");
               minutRecord=minuti;
               secundRecord=secundi;
               milliSecundiRecord=milliSecundi;
               saveRecordInMemory();
               boolRecord=true;
-//              isList=false;
+              //----------далее проверяем новый рекорд, т.е. сравниваем предидущий рекорд и в лучае если время меньше записываем новый рекорд - Конец----
             }
           }
 
         }
-        isList=false;
+        isList=false;// для акивации дополнительных кнопок при окончании игры
+        print("проверяем isList=${isList}");
+
+        //------проверяем если мы уложились во времени сложности игры производим запись в память о прохождении данного уровня и перехода на следующий - Начало-------
         if(secundi<minutiSlojnosti){
           saveInMemory();
+          boolProxojdeniyaUrovnya=true;
           print("Функция проверки правильности нажатия и Рекорда переход на следующий уровень proidenUroven =${proidenUroven} nameLevelInt=${nameLevelInt}");
         }else{
+          boolProxojdeniyaUrovnya=false;
           print("Функция проверки правильности нажатия и Рекорда не переход на следующий уровень proidenUroven =${proidenUroven} nameLevelInt=${nameLevelInt}");
         }
+        //------проверяем если мы уложились во времени сложности игры производим запись в память о прохождении данного уровня и перехода на следующий - Конец-------
       }
     });
   }
@@ -246,6 +254,7 @@ class _Level3State extends State<Level3> {
 //+++++++++++Функция сброса переменных при начале игры - Начало+++++++++++++
   @override
   void dischargeState() async {
+    print("Сброс");
     n = 0; //Учавствует в цикле из 20 задний
     nNagimaniya = 0; //Кол-во нажатий
     correct_answer = 0; //Кол-во правильных ответов
@@ -253,10 +262,10 @@ class _Level3State extends State<Level3> {
     proverka_num = 0;
     numRandom = -1;
     milliSecundi = secundi = minuti = 0;
-    minutiSlojnosti=level_of_difficulty;//присваиваем минимальное время за которое надо пройти уровень (зависит от уровня сложности, можно поменять формулу присвоения)
 
     isList = true; //логич перемен для активации дополнительных кнопок
     boolRecord=false;// готовим для следующего рекорда
+    boolProxojdeniyaUrovnya=false;//для активации кнопок прошел или нет
     stopTimer = true;//для начала отсчета времени при повторе игры
     SharedPreferences pref = await SharedPreferences.getInstance();
     proidenUroven = pref.getInt("Level_completed"); //присваеваем переменной номер пройденного уровня
@@ -267,10 +276,19 @@ class _Level3State extends State<Level3> {
     secundRecord = pref.getInt("Record_Level3_sec");//записываем рекорд из памяти
     minutRecord = pref.getInt("Record_Level3_minut");//записываем рекорд из памяти
     print("min=${minutRecord}, sec=${secundRecord}, millsec=${minutRecord}");
+
+    minutiSlojnosti=level_of_difficulty*10;//присваиваем минимальное время за которое надо пройти уровень (зависит от уровня сложности, можно поменять формулу присвоения)
+
     if(minutRecord==null && secundRecord==null && milliSecundiRecord==null){//если рекорда еще нет, присваиваем максимальное значение
       minutRecord=secundRecord=59;
       milliSecundiRecord=9;
     }
+
+//    //---при отладке если надо сбросить рекорд разкоментировать --Начало---------------
+//    await pref.setInt("Record_Level3_millisec", null); //сохраняем Рекорд в памяти телефона
+//    await pref.setInt("Record_Level3_sec", null);
+//    await pref.setInt("Record_Level3_minut", null);
+//    //---при отладке если надо сбросить рекорд разкоментировать --Конец---------------
 
   }
 //+++++++++++Функция сброса переменных при начале игры - Конец+++++++++++++
@@ -303,6 +321,9 @@ class _Level3State extends State<Level3> {
     await prefsRecord.setInt("Record_Level3_millisec", milliSecundi); //сохраняем Рекорд в памяти телефона
     await prefsRecord.setInt("Record_Level3_sec", secundi);
     await prefsRecord.setInt("Record_Level3_minut", minuti);
+
+
+
     print(nameLevelInt);
   }
 
@@ -554,7 +575,7 @@ class _Level3State extends State<Level3> {
                         child: Table(
                           children: <TableRow>[
                             TableRow(
-                              children: proidenUroven == nameLevelInt
+                              children: boolProxojdeniyaUrovnya
                               ?[
                                 Container(
                                   //--------Кнопка "Повторить" - Начало--------------
@@ -646,6 +667,7 @@ class _Level3State extends State<Level3> {
                                     onPressed: () {
                                       dischargeState(); //вызываем функцию сброса данных для логики
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => Level3()));
+                                      print("isList=${isList}");
                                     },
                                   ),
                                   //--------Кнопка "Уровень не пройден" - Конец--------------
