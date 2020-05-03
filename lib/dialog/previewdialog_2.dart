@@ -38,11 +38,11 @@ class _PreviewDialog_2State extends State<PreviewDialog_2> {
           margin: EdgeInsets.all(0),
           decoration: BoxDecoration(
 
-              //-----------Основной фон - Начало----------------------------------------
+            //-----------Основной фон - Начало----------------------------------------
               image: DecorationImage(
                   image: Image.asset("assets/level1.jpg").image, //фоновое изображение контейнера
                   fit: BoxFit.cover //растягивает н весь экраан
-                  )),
+              )),
           //-----------Основной фон - Конец----------------------------------------
 
           child: Stack(
@@ -64,11 +64,11 @@ class _PreviewDialog_2State extends State<PreviewDialog_2> {
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                        image: Image.asset(
-                          "assets/previewbacgroung_level1.jpg",
-                        ).image,
-                        fit: BoxFit.cover,
-                      )),
+                            image: Image.asset(
+                              "assets/previewbacgroung_level1.jpg",
+                            ).image,
+                            fit: BoxFit.cover,
+                          )),
                       //----------фоновая картинка - Конец------------------------------------
 
                       child: Stack(
@@ -81,6 +81,7 @@ class _PreviewDialog_2State extends State<PreviewDialog_2> {
                             child: RaisedButton.icon(
                               elevation: 0.0, //убераем тень
                               color: Colors.transparent,
+
 
                               icon: Icon(Icons.cancel),
                               label: Text(""),
@@ -107,7 +108,7 @@ class _PreviewDialog_2State extends State<PreviewDialog_2> {
                                     width: width_Contaner_Imags,
                                     margin: EdgeInsets.all(10),
                                     child: Image.asset(
-                                      "assets/img_level2/preview_img2.png",
+                                      "assets/preview_img1.png",
                                       alignment: Alignment.center,
                                     ),
                                   ),
@@ -124,8 +125,7 @@ class _PreviewDialog_2State extends State<PreviewDialog_2> {
                                     margin: EdgeInsets.all(2),
                                     alignment: Alignment.center,
                                     child: Text(
-                                      "Отдохнем от цифр и поиграем в игру \n-Поймай мышонка!!!-\n Перед тобой откроется несколько норок и в одной "
-                                      "из них будет появляться мышка - ее нужно поймать нажав на нее пальцем. Вперед мой друг!",
+                                      "Выбери цифру, которая меньше",
                                       textScaleFactor: 1.2,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.blue),
@@ -164,6 +164,7 @@ class _PreviewDialog_2State extends State<PreviewDialog_2> {
                                     ),
                                   ),
                                   //----------кнопка начала уровня игры - Конец---------------------------
+
                                 ],
                               ),
                             ),

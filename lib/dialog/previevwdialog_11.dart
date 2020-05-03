@@ -5,9 +5,9 @@ import 'package:quiz/levels/level2.dart';
 import 'package:quiz/levels/level3.dart';
 import 'package:quiz/main.dart';
 
-class PreviewDialog_3 extends StatefulWidget {
+class PreviewDialog_11 extends StatefulWidget {
   @override
-  _PreviewDialog_3State createState() => _PreviewDialog_3State();
+  _PreviewDialog_11State createState() => _PreviewDialog_11State();
 }
 //--------Переменные размещения на экране - Начало--------
 
@@ -28,7 +28,7 @@ double left_Button_Close = 270; //Начальное положение кноп
 //double left_Level_text= 200;//Начальное положение кнопки "НАЗАД" от левого края
 //--------Переменные размещения на экране - Конец--------
 
-class _PreviewDialog_3State extends State<PreviewDialog_3> {
+class _PreviewDialog_11State extends State<PreviewDialog_11> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,6 +82,7 @@ class _PreviewDialog_3State extends State<PreviewDialog_3> {
                             child: RaisedButton.icon(
                               elevation: 0.0, //убераем тень
                               color: Colors.transparent,
+
                               icon: Icon(Icons.cancel),
                               label: Text(""),
                               onPressed: () {
@@ -107,14 +108,14 @@ class _PreviewDialog_3State extends State<PreviewDialog_3> {
                                     width: width_Contaner_Imags,
                                     margin: EdgeInsets.all(10),
                                     child: Image.asset(
-                                      "assets/preview_img1.png",
+                                      "assets/img_level3/preview_img3.png",
                                       alignment: Alignment.center,
                                     ),
                                   ),
                                   //----------картинка поясняющая суть задания - Конец--------------------
                                   Container(
                                     width: 100,
-                                    height: 50,
+                                    height: 10,
                                     color: Colors.transparent,
                                   ),
 
@@ -124,7 +125,8 @@ class _PreviewDialog_3State extends State<PreviewDialog_3> {
                                     margin: EdgeInsets.all(2),
                                     alignment: Alignment.center,
                                     child: Text(
-                                      "Выбери цифру, под которой надпись совпадает с ее наименованием",
+                                      "Проверим твою внимательность!!! \nПеред тобой доска с разбросанными цифрами от 1 до 15.\n Нажимай поочередно на цифры от 1 до 15 "
+                                          "и чем быстрее ты это сделаешь, тем больше заработаешь очков и перейдешь на следующий уровень.\n Вперед мой друг!",
                                       textScaleFactor: 1.2,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.blue),
@@ -158,12 +160,11 @@ class _PreviewDialog_3State extends State<PreviewDialog_3> {
                                         style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                                       ),
                                       onPressed: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Level3()));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Level11()));
                                       },
                                     ),
                                   ),
                                   //----------кнопка начала уровня игры - Конец---------------------------
-
                                 ],
                               ),
                             ),

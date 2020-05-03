@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:quiz/gamelivels.dart';
 import 'package:quiz/levels/level1.dart';
 import 'package:quiz/levels/level2.dart';
-import 'package:quiz/levels/level3.dart';
+import 'package:quiz/levels/livel6.dart';
 import 'package:quiz/main.dart';
 
-class PreviewDialog_3 extends StatefulWidget {
+class PreviewDialog_6 extends StatefulWidget {
   @override
-  _PreviewDialog_3State createState() => _PreviewDialog_3State();
+  _PreviewDialog_6State createState() => _PreviewDialog_6State();
 }
 //--------Переменные размещения на экране - Начало--------
 
@@ -28,7 +28,7 @@ double left_Button_Close = 270; //Начальное положение кноп
 //double left_Level_text= 200;//Начальное положение кнопки "НАЗАД" от левого края
 //--------Переменные размещения на экране - Конец--------
 
-class _PreviewDialog_3State extends State<PreviewDialog_3> {
+class _PreviewDialog_6State extends State<PreviewDialog_6> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,11 +39,11 @@ class _PreviewDialog_3State extends State<PreviewDialog_3> {
           margin: EdgeInsets.all(0),
           decoration: BoxDecoration(
 
-            //-----------Основной фон - Начало----------------------------------------
+              //-----------Основной фон - Начало----------------------------------------
               image: DecorationImage(
                   image: Image.asset("assets/level1.jpg").image, //фоновое изображение контейнера
                   fit: BoxFit.cover //растягивает н весь экраан
-              )),
+                  )),
           //-----------Основной фон - Конец----------------------------------------
 
           child: Stack(
@@ -65,11 +65,11 @@ class _PreviewDialog_3State extends State<PreviewDialog_3> {
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: Image.asset(
-                              "assets/previewbacgroung_level1.jpg",
-                            ).image,
-                            fit: BoxFit.cover,
-                          )),
+                        image: Image.asset(
+                          "assets/previewbacgroung_level1.jpg",
+                        ).image,
+                        fit: BoxFit.cover,
+                      )),
                       //----------фоновая картинка - Конец------------------------------------
 
                       child: Stack(
@@ -82,6 +82,7 @@ class _PreviewDialog_3State extends State<PreviewDialog_3> {
                             child: RaisedButton.icon(
                               elevation: 0.0, //убераем тень
                               color: Colors.transparent,
+
                               icon: Icon(Icons.cancel),
                               label: Text(""),
                               onPressed: () {
@@ -107,7 +108,7 @@ class _PreviewDialog_3State extends State<PreviewDialog_3> {
                                     width: width_Contaner_Imags,
                                     margin: EdgeInsets.all(10),
                                     child: Image.asset(
-                                      "assets/preview_img1.png",
+                                      "assets/img_level2/preview_img2.png",
                                       alignment: Alignment.center,
                                     ),
                                   ),
@@ -124,7 +125,8 @@ class _PreviewDialog_3State extends State<PreviewDialog_3> {
                                     margin: EdgeInsets.all(2),
                                     alignment: Alignment.center,
                                     child: Text(
-                                      "Выбери цифру, под которой надпись совпадает с ее наименованием",
+                                      "Отдохнем от цифр и поиграем в игру \n-Поймай мышонка!!!-\n Перед тобой откроется несколько норок и в одной "
+                                      "из них будет появляться мышка - ее нужно поймать нажав на нее пальцем. Вперед мой друг!",
                                       textScaleFactor: 1.2,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.blue),
@@ -158,12 +160,11 @@ class _PreviewDialog_3State extends State<PreviewDialog_3> {
                                         style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                                       ),
                                       onPressed: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Level3()));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Level6()));
                                       },
                                     ),
                                   ),
                                   //----------кнопка начала уровня игры - Конец---------------------------
-
                                 ],
                               ),
                             ),
