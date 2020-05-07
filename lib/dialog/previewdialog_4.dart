@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:quiz/gamelivels.dart';
 import 'package:quiz/levels/level1.dart';
-import 'package:quiz/levels/level11.dart';
 import 'package:quiz/levels/level2.dart';
-import 'package:quiz/levels/level3.dart';
+import 'package:quiz/levels/level4.dart';
 import 'package:quiz/main.dart';
 
-class PreviewDialog_11 extends StatefulWidget {
+class PreviewDialog_4 extends StatefulWidget {
   @override
-  _PreviewDialog_11State createState() => _PreviewDialog_11State();
+  _PreviewDialog_4State createState() => _PreviewDialog_4State();
 }
 //--------Переменные размещения на экране - Начало--------
 
@@ -29,7 +28,7 @@ double left_Button_Close = 270; //Начальное положение кноп
 //double left_Level_text= 200;//Начальное положение кнопки "НАЗАД" от левого края
 //--------Переменные размещения на экране - Конец--------
 
-class _PreviewDialog_11State extends State<PreviewDialog_11> {
+class _PreviewDialog_4State extends State<PreviewDialog_4> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,6 +83,7 @@ class _PreviewDialog_11State extends State<PreviewDialog_11> {
                               elevation: 0.0, //убераем тень
                               color: Colors.transparent,
 
+
                               icon: Icon(Icons.cancel),
                               label: Text(""),
                               onPressed: () {
@@ -109,25 +109,24 @@ class _PreviewDialog_11State extends State<PreviewDialog_11> {
                                     width: width_Contaner_Imags,
                                     margin: EdgeInsets.all(10),
                                     child: Image.asset(
-                                      "assets/img_level3/preview_img3.png",
+                                      "assets/img_level4/preview_img4.png",
                                       alignment: Alignment.center,
                                     ),
                                   ),
                                   //----------картинка поясняющая суть задания - Конец--------------------
                                   Container(
                                     width: 100,
-                                    height: 10,
+                                    height: 50,
                                     color: Colors.transparent,
                                   ),
 
-                                  //----------текст поясняющий суть здния - Начало------------------------
+                                  //----------текст поясняющий суть задания - Начало------------------------
                                   Container(
                                     width: MediaQuery.of(context).size.width,
                                     margin: EdgeInsets.all(2),
                                     alignment: Alignment.center,
                                     child: Text(
-                                      "Проверим твою внимательность!!! \nПеред тобой доска с разбросанными цифрами от 1 до 15.\n Нажимай поочередно на цифры от 1 до 15 "
-                                          "и чем быстрее ты это сделаешь, тем больше заработаешь очков и перейдешь на следующий уровень.\n Вперед мой друг!",
+                                      "Теперь попробуем складывать числа, напиши правильный ответ",
                                       textScaleFactor: 1.2,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.blue),
@@ -161,11 +160,12 @@ class _PreviewDialog_11State extends State<PreviewDialog_11> {
                                         style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                                       ),
                                       onPressed: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Level11()));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Level4()));
                                       },
                                     ),
                                   ),
                                   //----------кнопка начала уровня игры - Конец---------------------------
+
                                 ],
                               ),
                             ),

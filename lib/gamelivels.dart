@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quiz/dialog/previevwdialog_3.dart';
 import 'package:quiz/dialog/previewdialog.dart';
 import 'package:quiz/dialog/previewdialog_2.dart';
+import 'package:quiz/dialog/previewdialog_4.dart';
 import 'package:quiz/levels/level1.dart';
 import 'package:quiz/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -178,7 +179,7 @@ class _GameLivelsState extends State<GameLivels> {
                             gameLevelButton("1",massivColorLevel[0], PreviewDialog(),1),
                             gameLevelButton("2",massivColorLevel[1], PreviewDialog_2(),2),
                             gameLevelButton("3",massivColorLevel[2], PreviewDialog_3(),3),
-                            gameLevelButton("4",massivColorLevel[3], Level1(),4),
+                            gameLevelButton("4",massivColorLevel[3], PreviewDialog_4(),4),
                             gameLevelButton("5",massivColorLevel[4], Level1(),5),
                           ]),
 
