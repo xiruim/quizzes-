@@ -346,38 +346,6 @@ class _Level4State extends State<Level4> {
                                 ),
                                 child: _massivImageLevel1[numLeft], //Генерирует из массива левую картинку
                               ),
-//                          //-------Логика проверки больше или меньше нажатая Левая карточка - Начало---------------
-//                          onTap: () {
-//                            setState(() {
-//                              print("Номер вопроса ");
-//                              print(n);
-//                              if (n <= 19) {
-//                                //если условие выполняется то выполнять следующие действия
-//
-//                                if (numLeft < numRight) {
-//                                  //проверяем - если ответили правильно
-//                                  correct_answer = correct_answer + 1; //то добавляем единицу
-//                                  correct_wrong = true; //присваиваем правильно
-//                                  massivColorLevel1[n] = Colors.yellow; //присваиваем желтый - правильно
-//                                } else {
-//                                  correct_wrong = false; //присаиваем неправильно
-//                                  massivColorLevel1[n] = Colors.red; //присваиваем красный - неправильно
-//                                }
-//                                n++; //переходим к следующему вопросу
-//                                randomLeftRight();
-//                                if (n == 20) {
-//                                  isList = false;
-//                                  if((n-correct_answer)<=level_of_difficulty){//если уровень пройден
-//                                    _rowKey.currentState.showSnackBar(SnackBar(content: Text("Поздравляю!!! Уровень пройден. Вы правильно ответили на " + correct_answer.toString() + " вопросов из " + (n).toString())));
-//                                    saveInMemory();// вызывем функцию сохранения пройденного уровеня в памяти телефона
-//                                  }else{
-//                                    _rowKey.currentState.showSnackBar(SnackBar(content: Text("Уровень не пройден!!! Вы правильно ответили только на " + correct_answer.toString() + " вопросов из " + (n).toString())));
-//                                  }
-//                                }
-//                              }
-//                            });
-//                          },
-//                          //-------Логика проверки больше или меньше нажатая Левая карточка - Конец---------------
                             ),
                             Container(
                               child: Container(
@@ -400,9 +368,10 @@ class _Level4State extends State<Level4> {
                 ),
                 Positioned(
                   //-----------Контейнер с "+" между цифрами - Начало---------------
-                  top: top_Contaner_Imags-120,
+                  top: top_Contaner_Imags,
                   child: Container(
                     width: MediaQuery.of(context).size.width,
+                    height:500,
                     padding: EdgeInsets.all(2),
                     margin: EdgeInsets.all(0),
                     child: Container(
@@ -577,8 +546,8 @@ class _Level4State extends State<Level4> {
                             height: 1, fontSize: 50,),
 
                           controller: contSumma,
-
                           decoration: InputDecoration(
+//                            icon: Icon(Icons.question_answer),
                               contentPadding: EdgeInsets.all(5),
                               hintText: "= "
                           ),
@@ -618,9 +587,9 @@ class _Level4State extends State<Level4> {
                                 stringSumma=contSumma.text;
                                 intSummaLR=numLeft+numRight;
                                 intSummaParse=int.parse(stringSumma);
-                                print("stringSumma = ${intSummaParse} = ");
-                                print("intSummaLR = ${intSummaLR}");
-                                print("n = ${n} = ");
+//                                print("stringSumma = ${intSummaParse} = ");
+//                                print("intSummaLR = ${intSummaLR}");
+//                                print("n = ${n} = ");
 
                                 if (intSummaLR==intSummaParse) {
                                   //проверяем - если ответили правильно
@@ -633,8 +602,11 @@ class _Level4State extends State<Level4> {
                                 }
                                 n++; //переходим к следующему вопросу
                                 randomLeftRight();
+                                contSumma.text="";//очищаем поле ввода при нажатии на ответ
+
                                 if (n == 20) {
                                   isList = false;
+                                  FocusScope.of(context).requestFocus(new FocusNode());
                                   if((n-correct_answer)<=level_of_difficulty){//если уровень пройден
                                     _rowKey.currentState.showSnackBar(SnackBar(content: Text("Поздравляю!!! Уровень пройден. Вы правильно ответили на " + correct_answer.toString() + " вопросов из " + (n).toString())));
                                     saveInMemory();// вызывем функцию сохранения пройденного уровеня в памяти телефона
