@@ -138,9 +138,9 @@ var massivColorLevel1 = {
 void randomLeftRight() {
   numLeft = random.nextInt(10); //Генерируем цифры от 0 до 9
   numRight = random.nextInt(10); //Генерируем цифры от 0 до 9
-  if (numLeft == numRight) {
-    randomLeftRight();
-  }
+//  if (numLeft == numRight) {
+//    randomLeftRight();
+//  }
 }
 //--------Функция генерации цифр от 0 до 9 - Конец-------
 
@@ -371,19 +371,25 @@ class _Level4State extends State<Level4> {
                   top: top_Contaner_Imags,
                   child: Container(
                     width: MediaQuery.of(context).size.width,
-                    height:500,
+                    height:250,
                     padding: EdgeInsets.all(2),
                     margin: EdgeInsets.all(0),
+                    alignment: Alignment.center,
                     child: Container(
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        padding: EdgeInsets.all(5),
-                        margin: EdgeInsets.all(1),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          border: Border.all(width: 1, color: Colors.black12),
-                        ),
-                        child: Image.asset("assets/img_level4/level_+.png"), //Генерирует из массива левую картинку
+                      height:250,
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.all(40),
+                      margin: EdgeInsets.all(1),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        border: Border.all(width: 1, color: Colors.black12),
+                      ),
+//                        child: Image.asset("assets/img_level4/level_+.png"), //картинка со знком +
+                      child: Text(
+                        "+",//вместо картинки со знаком + будем использовать символ +
+                        textScaleFactor: 10.5,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.w600, fontStyle: FontStyle.italic, color: Colors.red,decorationColor: Colors.red),
                       ),
                     ),
                   ),
@@ -392,7 +398,6 @@ class _Level4State extends State<Level4> {
                 isList
                     ? Positioned(
                   top: top_Contaner_Imags + 250,
-                  //-----------Контейнер с текстом под картинками - Начало---------------
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.all(2),
@@ -400,6 +405,7 @@ class _Level4State extends State<Level4> {
                     child: Table(
                       children: <TableRow>[
                         TableRow(
+                          //----------Цифры для написания ответа ------ Начало-------
                           children: [
                             Container(
                               width: MediaQuery.of(context).size.width,
@@ -431,8 +437,10 @@ class _Level4State extends State<Level4> {
                                 style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                               ),
                             ),
-                            //-----------Контейнер с текстом под картинками - Конец---------------
                           ],
+                          //----------Цифры для написания ответа ------ Конец-------
+
+
                         ),
                       ],
                     ),
