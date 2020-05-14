@@ -17,8 +17,8 @@ class Level4 extends StatefulWidget {
 String nameLevelStr = "Уровень: ";
 int nameLevelInt = 4;
 String text = ""; //пустой текск в полосе пройденных вопросов
-TextEditingController contSumma=TextEditingController();//контроллер хранения суммы вводимой игроком
-String stringSumma;//для последующего преобразования из текстового контроллера в int
+TextEditingController contSumma = TextEditingController(); //контроллер хранения суммы вводимой игроком
+String stringSumma=" "; //для последующего преобразования из текстового контроллера в int
 //--------Текстовые переменные - Конец--------
 
 //--------Переменные для логики - Начало---------
@@ -165,10 +165,38 @@ Widget gameLevel(massivColorLevel1) {
 }
 //---Конец---Общий виджет полоса пройденных вопросов-------
 
+//-----Общий виджет кнопок с цифрами ответа ---- Начало---
+Widget numButton(String text, Function onPress) {
+  return InkWell(
+    onTap: () {
+      onPress();
+    },
+    child: Container(
+      width: 40,
+      height: 40,
+      padding: EdgeInsets.all(2),
+      margin: EdgeInsets.all(2),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        border: Border.all(
+          color: Colors.white,
+          width: 2,
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
+      ),
+    ),
+  );
+}
+
+//-----Общий виджет кнопок с цифрами ответа ---- Конец---
+
 class _Level4State extends State<Level4> {
-
-  SaveUrovenInMemoru _saveUrovenInMemoru = SaveUrovenInMemoru();// Вызываем класс записи в память
-
+  SaveUrovenInMemoru _saveUrovenInMemoru = SaveUrovenInMemoru(); // Вызываем класс записи в память
 
   //--------Задаем ключи - Начало----------
   final _rowKey = GlobalKey<ScaffoldState>();
@@ -187,12 +215,12 @@ class _Level4State extends State<Level4> {
 
   //---------Функция проверки сложности уровня - Начало-------
   @override
-  void slognostLevel() async{
-    SharedPreferences pref=await SharedPreferences.getInstance();
-    level_of_difficulty=pref.getInt("Uroven_slognosti");//присваеваем переменной уровень сложности
+  void slognostLevel() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    level_of_difficulty = pref.getInt("Uroven_slognosti"); //присваеваем переменной уровень сложности
 
-    print("Уровень сложности");  print(level_of_difficulty);
-
+    print("Уровень сложности");
+    print(level_of_difficulty);
   }
   //---------Функция проверки сложности уровня - Конец-------
 
@@ -214,18 +242,29 @@ class _Level4State extends State<Level4> {
   @override
   void saveInMemory() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt("Level_completed", nameLevelInt+1); //открываем следующий уровень и сохраняем в памяти телефона
-    print("nameLevelInt ");print(nameLevelInt);
+    await prefs.setInt("Level_completed", nameLevelInt + 1); //открываем следующий уровень и сохраняем в памяти телефона
+    print("nameLevelInt ");
+    print(nameLevelInt);
   }
 
   //---------Функция сохранения пройденного уровня в памяти телефона - Конец----------------
+//--------Функция при нажатии цифр для получения ответа - Начало-------
+  void addSymbol(symbol) {
+    setState(() {
+      if (stringSumma == "") {
+        stringSumma = symbol;
+      } else {
+        stringSumma += symbol;
+      }
+    });
+  }
 
+//--------Функция при нажатии цифр для получения ответа - Конец-------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _rowKey,
       body: Center(
-
         child: ListView(
           children: <Widget>[
             Stack(
@@ -371,12 +410,12 @@ class _Level4State extends State<Level4> {
                   top: top_Contaner_Imags,
                   child: Container(
                     width: MediaQuery.of(context).size.width,
-                    height:250,
+                    height: 250,
                     padding: EdgeInsets.all(2),
                     margin: EdgeInsets.all(0),
                     alignment: Alignment.center,
                     child: Container(
-                      height:250,
+                      height: 250,
                       width: MediaQuery.of(context).size.width,
                       padding: EdgeInsets.all(40),
                       margin: EdgeInsets.all(1),
@@ -386,10 +425,10 @@ class _Level4State extends State<Level4> {
                       ),
 //                        child: Image.asset("assets/img_level4/level_+.png"), //картинка со знком +
                       child: Text(
-                        "+",//вместо картинки со знаком + будем использовать символ +
+                        "+", //вместо картинки со знаком + будем использовать символ +
                         textScaleFactor: 10.5,
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontWeight: FontWeight.w600, fontStyle: FontStyle.italic, color: Colors.red,decorationColor: Colors.red),
+                        style: TextStyle(fontWeight: FontWeight.w600, fontStyle: FontStyle.italic, color: Colors.red, decorationColor: Colors.red),
                       ),
                     ),
                   ),
@@ -397,178 +436,220 @@ class _Level4State extends State<Level4> {
                 ),
                 isList
                     ? Positioned(
-                  top: top_Contaner_Imags + 250,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.all(2),
-                    margin: EdgeInsets.all(0),
-                    child: Table(
-                      children: <TableRow>[
-                        TableRow(
-                          //----------Цифры для написания ответа ------ Начало-------
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              padding: EdgeInsets.all(5),
-                              margin: EdgeInsets.all(1),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
-                                //border: Border.all(width: 1, color: Colors.black12),
-                              ),
-                              child: Text(
-                                _massivTextLevel1[numLeft],
-                                textScaleFactor: 1.5,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
-                              ),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              padding: EdgeInsets.all(5),
-                              margin: EdgeInsets.all(1),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
-                                //border: Border.all(width: 1, color: Colors.black12),
-                              ),
-                              child: Text(
-                                _massivTextLevel1[numRight],
-                                textScaleFactor: 1.5,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
-                              ),
-                            ),
-                          ],
-                          //----------Цифры для написания ответа ------ Конец-------
+                        top: top_Contaner_Imags + 300,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.all(2),
+                          margin: EdgeInsets.all(0),
+                          child: Table(
+                            children: <TableRow>[
+                              //-----------Ответ------Конец-----
+//                        TableRow(
+//                          children: [
+//                            Container(
+//                              width: MediaQuery.of(context).size.width,
+//                              padding: EdgeInsets.all(5),
+//                              margin: EdgeInsets.all(1),
+//                              decoration: BoxDecoration(
+//                                borderRadius: BorderRadius.all(Radius.circular(10)),
+//                                //border: Border.all(width: 1, color: Colors.black12),
+//                              ),
+//                              child: Text(
+//                                stringSumma,
+//                                textScaleFactor: 1.5,
+//                                textAlign: TextAlign.center,
+//                                style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
+//                              ),
+//                            ),
+//                          ],
+//                        ),
+                              //-----------Ответ------Конец-----
+                              TableRow(
+                                  //----------Цифры для написания ответа ------ Начало-------
+//                          children: [
+//                            Container(
+//                              width: MediaQuery.of(context).size.width,
+//                              padding: EdgeInsets.all(5),
+//                              margin: EdgeInsets.all(1),
+//                              decoration: BoxDecoration(
+//                                borderRadius: BorderRadius.all(Radius.circular(10)),
+//                                //border: Border.all(width: 1, color: Colors.black12),
+//                              ),
+//                              child: Text(
+//                                _massivTextLevel1[numLeft],
+//                                textScaleFactor: 1.5,
+//                                textAlign: TextAlign.center,
+//                                style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
+//                              ),
+//                            ),
+//                            Container(
+//                              width: MediaQuery.of(context).size.width,
+//                              padding: EdgeInsets.all(5),
+//                              margin: EdgeInsets.all(1),
+//                              decoration: BoxDecoration(
+//                                borderRadius: BorderRadius.all(Radius.circular(10)),
+//                                //border: Border.all(width: 1, color: Colors.black12),
+//                              ),
+//                              child: Text(
+//                                _massivTextLevel1[numRight],
+//                                textScaleFactor: 1.5,
+//                                textAlign: TextAlign.center,
+//                                style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
+//                              ),
+//                            ),
+//                          ],
+                                  //----------(56789)-------------
+                                  children: [
+                                    numButton("5", () {
+                                      addSymbol(5);
+                                    }),
+                                    numButton("6", () {
+                                      addSymbol(6);
+                                    }),
+                                    numButton("7", () {
+                                      addSymbol(7);
+                                    }),
+                                    numButton("8", () {
+                                      addSymbol(8);
+                                    }),
+                                    numButton("9", () {
+                                      addSymbol(9);
+                                    }),
+                                  ]),
+                              //----------(01234)-------------
+                              TableRow(children: [
+                                numButton("0", () {
+                                  addSymbol(0);
+                                }),
+                                numButton("1", () {
+                                  addSymbol(1);
+                                }),
+                                numButton("2", () {
+                                  addSymbol(2);
+                                }),
+                                numButton("3", () {
+                                  addSymbol(3);
+                                }),
+                                numButton("4", () {
+                                  addSymbol(4);
+                                }),
+                              ]),
 
-
+                              //----------Цифры для написания ответа ------ Конец-------
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                )
+                      )
                     : Positioned(
-                  top: top_Contaner_Imags + 250,
-                  //-----------Появляющийся Контейнер с окончнием игры - Начало---------------
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.all(0.2),
-                    margin: EdgeInsets.all(0),
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                    ),
-                    child: Table(
-                      children: <TableRow>[
-                        TableRow(
-                          children: [
-                            Container(
-                              //--------Кнопка "Повторить" - Начало--------------
-                              width: width_Button_Nazad,
-                              height: height_Button_Nazad,
-                              padding: EdgeInsets.all(5),
-                              margin: EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: 2,
-                                ),
-                                borderRadius: BorderRadius.all(Radius.circular(20)),
-                              ),
-                              child: RaisedButton(
-                                elevation: 0.0, //убераем тень
-                                color: Colors.transparent,
-                                child: Text(
-                                  "Повторить",
-                                  textScaleFactor: 1.0,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
-                                ),
-                                onPressed: () {
-                                  dischargeState(); //вызываем функцию сброса данных для логики
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Level4()));
-                                },
-                              ),
-                              //--------Кнопка "Повторить" - Конец--------------
+                        top: top_Contaner_Imags + 250,
+                        //-----------Появляющийся Контейнер с окончнием игры - Начало---------------
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.all(0.2),
+                          margin: EdgeInsets.all(0),
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            border: Border.all(
+                              color: Colors.white,
+                              width: 1,
                             ),
-                            Container(
-                              //--------Кнопка "Следующий уровень" - Начало--------------
-                              width: width_Button_Nazad,
-                              height: height_Button_Nazad,
-                              padding: EdgeInsets.all(5),
-                              margin: EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: 2,
-                                ),
-                                borderRadius: BorderRadius.all(Radius.circular(20)),
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          child: Table(
+                            children: <TableRow>[
+                              TableRow(
+                                children: [
+                                  Container(
+                                    //--------Кнопка "Повторить" - Начало--------------
+                                    width: width_Button_Nazad,
+                                    height: height_Button_Nazad,
+                                    padding: EdgeInsets.all(5),
+                                    margin: EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      border: Border.all(
+                                        color: Colors.white,
+                                        width: 2,
+                                      ),
+                                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                                    ),
+                                    child: RaisedButton(
+                                      elevation: 0.0, //убераем тень
+                                      color: Colors.transparent,
+                                      child: Text(
+                                        "Повторить",
+                                        textScaleFactor: 1.0,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
+                                      ),
+                                      onPressed: () {
+                                        dischargeState(); //вызываем функцию сброса данных для логики
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Level4()));
+                                      },
+                                    ),
+                                    //--------Кнопка "Повторить" - Конец--------------
+                                  ),
+                                  Container(
+                                    //--------Кнопка "Следующий уровень" - Начало--------------
+                                    width: width_Button_Nazad,
+                                    height: height_Button_Nazad,
+                                    padding: EdgeInsets.all(5),
+                                    margin: EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      border: Border.all(
+                                        color: Colors.white,
+                                        width: 2,
+                                      ),
+                                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                                    ),
+                                    child: RaisedButton(
+                                      elevation: 0.0, //убераем тень
+                                      color: Colors.transparent,
+                                      child: Text(
+                                        "Следующий уровень",
+                                        textScaleFactor: 1.0,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
+                                      ),
+                                      onPressed: () {
+                                        dischargeState(); //вызываем функцию сброса данных для логики
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => GameLivels()));
+                                      },
+                                    ),
+                                    //--------Кнопка "Следующий уровень" - Конец--------------
+                                  ),
+                                  //-----------Появляющийся Контейнер с окончнием игры - Конец---------------
+                                ],
                               ),
-                              child: RaisedButton(
-                                elevation: 0.0, //убераем тень
-                                color: Colors.transparent,
-                                child: Text(
-                                  "Следующий уровень",
-                                  textScaleFactor: 1.0,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
-                                ),
-                                onPressed: () {
-                                  dischargeState(); //вызываем функцию сброса данных для логики
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => GameLivels()));
-                                },
-                              ),
-                              //--------Кнопка "Следующий уровень" - Конец--------------
-                            ),
-                            //-----------Появляющийся Контейнер с окончнием игры - Конец---------------
-                          ],
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
                 Positioned(
-                  top: top_Contaner_Imags + 300,
+                  top: top_Contaner_Imags + 230,
                   //-----------Форма ввода ответа под картинками - Начало---------------
-                  child: Column(
+                  child: Row(
                     children: <Widget>[
                       Container(
-                        width: MediaQuery.of(context).size.width,
+                        width: MediaQuery.of(context).size.width / 1.55,
                         padding: EdgeInsets.all(5),
                         margin: EdgeInsets.all(1),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           //border: Border.all(width: 1, color: Colors.black12),
                         ),
-                        child: TextFormField(
+                        child: Text(
+                          stringSumma,
+                          textScaleFactor: 1.5,
                           textAlign: TextAlign.center,
-                          keyboardType: TextInputType
-                              .number,//форма ввода - цифры
-                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,
-                            fontStyle: FontStyle.italic,
-                            height: 1, fontSize: 50,),
-
-                          controller: contSumma,
-                          decoration: InputDecoration(
-//                            icon: Icon(Icons.question_answer),
-                              contentPadding: EdgeInsets.all(5),
-                              hintText: "= "
-                          ),
-                          validator: (value){
-                            if(value.isEmpty){
-                              return"Введите сумму";
-                            }return null;
-                          },
+                          style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                         ),
-                     ),
+                      ),
+
                       Container(
                         width: width_Button_Nazad,
-                        height: height_Button_Nazad,
+                        height: 40,
                         padding: EdgeInsets.all(5),
                         margin: EdgeInsets.all(2),
                         decoration: BoxDecoration(
@@ -584,7 +665,7 @@ class _Level4State extends State<Level4> {
                           color: Colors.transparent,
                           child: Text(
                             "ОТВЕТ",
-                            textScaleFactor: 1.5,
+                            textScaleFactor: 1.3,
                             textAlign: TextAlign.center,
                             style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                           ),
@@ -592,14 +673,14 @@ class _Level4State extends State<Level4> {
                             setState(() {
                               if (n <= 19) {
                                 //если условие выполняется то выполнять следующие действия
-                                stringSumma=contSumma.text;
-                                intSummaLR=numLeft+numRight;
-                                intSummaParse=int.parse(stringSumma);
+                                stringSumma = contSumma.text;
+                                intSummaLR = numLeft + numRight;
+                                intSummaParse = int.parse(stringSumma);
 //                                print("stringSumma = ${intSummaParse} = ");
 //                                print("intSummaLR = ${intSummaLR}");
 //                                print("n = ${n} = ");
 
-                                if (intSummaLR==intSummaParse) {
+                                if (intSummaLR == intSummaParse) {
                                   //проверяем - если ответили правильно
                                   correct_answer = correct_answer + 1; //то добавляем единицу
                                   correct_wrong = true; //присваиваем правильно
@@ -610,25 +691,27 @@ class _Level4State extends State<Level4> {
                                 }
                                 n++; //переходим к следующему вопросу
                                 randomLeftRight();
-                                contSumma.text="";//очищаем поле ввода при нажатии на ответ
+                                contSumma.text = ""; //очищаем поле ввода при нажатии на ответ
 
                                 if (n == 20) {
                                   isList = false;
                                   FocusScope.of(context).requestFocus(new FocusNode());
-                                  if((n-correct_answer)<=level_of_difficulty){//если уровень пройден
-                                    _rowKey.currentState.showSnackBar(SnackBar(content: Text("Поздравляю!!! Уровень пройден. Вы правильно ответили на " + correct_answer.toString() + " вопросов из " + (n).toString())));
-                                    saveInMemory();// вызывем функцию сохранения пройденного уровеня в памяти телефона
-                                  }else{
-                                    _rowKey.currentState.showSnackBar(SnackBar(content: Text("Уровень не пройден!!! Вы правильно ответили только на " + correct_answer.toString() + " вопросов из " + (n).toString())));
+                                  if ((n - correct_answer) <= level_of_difficulty) {
+                                    //если уровень пройден
+                                    _rowKey.currentState.showSnackBar(
+                                        SnackBar(content: Text("Поздравляю!!! Уровень пройден. Вы правильно ответили на " + correct_answer.toString() + " вопросов из " + (n).toString())));
+                                    saveInMemory(); // вызывем функцию сохранения пройденного уровеня в памяти телефона
+                                  } else {
+                                    _rowKey.currentState
+                                        .showSnackBar(SnackBar(content: Text("Уровень не пройден!!! Вы правильно ответили только на " + correct_answer.toString() + " вопросов из " + (n).toString())));
                                   }
                                 }
                               }
                             });
-
                           },
                         ),
                       ),
-                     //-----------Форма ввода ответа под картинками - Начало---------------
+                      //-----------Форма ввода ответа под картинками - Начало---------------
                     ],
                   ),
                 ),
@@ -636,7 +719,6 @@ class _Level4State extends State<Level4> {
             ),
           ],
         ),
-
       ),
     );
   }
