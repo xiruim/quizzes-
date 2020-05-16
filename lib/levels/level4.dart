@@ -173,7 +173,7 @@ Widget numButton(String text, Function onPress) {
     },
     child: Container(
       width: 40,
-      height: 40,
+      height: 50,
       padding: EdgeInsets.all(2),
       margin: EdgeInsets.all(2),
       alignment: Alignment.center,
@@ -183,10 +183,11 @@ Widget numButton(String text, Function onPress) {
           color: Colors.white,
           width: 2,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(20)),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       child: Text(
         text,
+        textScaleFactor: 1.5,
         style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
       ),
     ),
@@ -232,6 +233,7 @@ class _Level4State extends State<Level4> {
     correct_answer = 0; //Кол-во правильных ответов
     correct_wrong = true; //правильно или непарвильно
     isList = true; //логич перемен для активации дополнительных кнопок
+    stringSumma = "";
     for (int i = 0; i <= 19; i++) {
       massivColorLevel1[i] = Colors.blueGrey;
     }
@@ -501,37 +503,37 @@ class _Level4State extends State<Level4> {
                                   //----------(56789)-------------
                                   children: [
                                     numButton("5", () {
-                                      addSymbol(5);
+                                      addSymbol("5");
                                     }),
                                     numButton("6", () {
-                                      addSymbol(6);
+                                      addSymbol("6");
                                     }),
                                     numButton("7", () {
-                                      addSymbol(7);
+                                      addSymbol("7");
                                     }),
                                     numButton("8", () {
-                                      addSymbol(8);
+                                      addSymbol("8");
                                     }),
                                     numButton("9", () {
-                                      addSymbol(9);
+                                      addSymbol("9");
                                     }),
                                   ]),
                               //----------(01234)-------------
                               TableRow(children: [
                                 numButton("0", () {
-                                  addSymbol(0);
+                                  addSymbol("0");
                                 }),
                                 numButton("1", () {
-                                  addSymbol(1);
+                                  addSymbol("1");
                                 }),
                                 numButton("2", () {
-                                  addSymbol(2);
+                                  addSymbol("2");
                                 }),
                                 numButton("3", () {
-                                  addSymbol(3);
+                                  addSymbol("3");
                                 }),
                                 numButton("4", () {
-                                  addSymbol(4);
+                                  addSymbol("4");
                                 }),
                               ]),
 
@@ -627,12 +629,13 @@ class _Level4State extends State<Level4> {
                         ),
                       ),
                 Positioned(
-                  top: top_Contaner_Imags + 230,
+                  top: top_Contaner_Imags + 250,
                   //-----------Форма ввода ответа под картинками - Начало---------------
                   child: Row(
                     children: <Widget>[
+                      //-----Поле вывода ответа - Начало------------------
                       Container(
-                        width: MediaQuery.of(context).size.width / 1.55,
+                        width: MediaQuery.of(context).size.width / 2,
                         padding: EdgeInsets.all(5),
                         margin: EdgeInsets.all(1),
                         decoration: BoxDecoration(
@@ -646,10 +649,40 @@ class _Level4State extends State<Level4> {
                           style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                         ),
                       ),
+                      //-----Поле вывода ответа - Конец------------------
 
+                      //-----Кнопка удалить - Начало---------------
+                      Container(
+                        width: 50,
+                        height: 50,
+//                        padding: EdgeInsets.all(1),
+//                        margin: EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          border: Border.all(
+                            color: Colors.red,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.cancel),
+                          color: Colors.red,
+                          disabledColor: Colors.white,
+                          alignment: Alignment.center,
+                          onPressed: () {
+                            setState(() {
+                              stringSumma = "";//очищаем поле ввода при нажатии на ответ
+                            });
+                          },
+                        ),
+                      ),
+                      //-----Кнопка удалить - Конец---------------
+
+                      //-----Кнопка ответа - Начало ---------------
                       Container(
                         width: width_Button_Nazad,
-                        height: 40,
+                        height: 50,
                         padding: EdgeInsets.all(5),
                         margin: EdgeInsets.all(2),
                         decoration: BoxDecoration(
@@ -658,7 +691,7 @@ class _Level4State extends State<Level4> {
                             color: Colors.white,
                             width: 2,
                           ),
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
                         child: RaisedButton(
                           elevation: 0.0, //убераем тень
@@ -673,8 +706,9 @@ class _Level4State extends State<Level4> {
                             setState(() {
                               if (n <= 19) {
                                 //если условие выполняется то выполнять следующие действия
-                                stringSumma = contSumma.text;
+//                                stringSumma = contSumma.text;
                                 intSummaLR = numLeft + numRight;
+                                print("stringSumma= ${stringSumma}");
                                 intSummaParse = int.parse(stringSumma);
 //                                print("stringSumma = ${intSummaParse} = ");
 //                                print("intSummaLR = ${intSummaLR}");
@@ -691,7 +725,8 @@ class _Level4State extends State<Level4> {
                                 }
                                 n++; //переходим к следующему вопросу
                                 randomLeftRight();
-                                contSumma.text = ""; //очищаем поле ввода при нажатии на ответ
+//                                contSumma.text = ""; //очищаем поле ввода при нажатии на ответ
+
 
                                 if (n == 20) {
                                   isList = false;
@@ -707,10 +742,12 @@ class _Level4State extends State<Level4> {
                                   }
                                 }
                               }
+                              stringSumma = "";//очищаем поле ввода при нажатии на ответ
                             });
                           },
                         ),
                       ),
+                      //-----Кнопка ответа - Конец ---------------
                       //-----------Форма ввода ответа под картинками - Начало---------------
                     ],
                   ),
