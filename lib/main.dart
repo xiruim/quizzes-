@@ -35,6 +35,10 @@ class _MyHomePageState extends State<MyHomePage> {
   String slognost = "Уровень сложности";
   int uroven_slognost;
 
+  //--------Переменные с картинками-------
+  String first_img="assets/main_img_smail.png";
+  String fon_img="assets/main_background.jpg";
+
   //---переменные для таблицы
   double width_tabl = 200; //ширина ячейки таблицы
   double height_tabl = 70; //высота ячейки таблицы
@@ -149,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
             //-----------Основной фон - Начало----------------------------------------
               image: DecorationImage(
-                  image: Image.asset("assets/main_background.jpg").image, //фоновое изображение контейнера
+                  image: Image.asset(fon_img).image, //фоновое изображение контейнера
                   fit: BoxFit.cover //растягивает н весь экраан
               )),
           //-----------Основной фон - Конец----------------------------------------
@@ -227,10 +231,10 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Stack(
           children: <Widget>[
             Positioned(
-              child: Image.asset("assets/main_background.jpg"),
+              child: Image.asset(fon_img),
             ),
             Positioned(
-              top: 100,
+              top: 150,
               width: MediaQuery.of(context).size.width,
               child: Center(
                 child: Container(
@@ -238,7 +242,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   height: 250,
                   alignment: Alignment.center,
                   //padding: ,
-                  child: Image.asset("assets/main_img_boy.png"),
+                  child: Image.asset(first_img),
                 ),
               ),
             ),
