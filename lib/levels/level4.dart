@@ -37,6 +37,8 @@ bool stopTimer = true; //логич перемен для счетчика вр�
 bool bool_smile=true;// - для показа разных смайликов
 int level_of_difficulty; //уровень сложности игры (1, 2 или 3)
 double timeGame = 0; //переменная для посчета времени игры
+double timeWaitSlognost=10;//переменная для задания отсчета обратного времени
+double timeWait=timeWaitSlognost;//переменная для отсчета обратного времени
 double chet_nechet=0;//для определения четное не четное
 
 //--------Переменные для логики - Конец---------
@@ -239,20 +241,21 @@ class _Level4State extends State<Level4> {
   }
   //---------Функция проверки сложности уровня - Конец-------
 
-  //---------Сброс всех значений н начальные; - Начало-------
+  //---------Сброс всех значений на начальные; - Начало-------
 
   @override
   void dischargeState() {
     n = 0; //Учавствует в цикле из 20 задний
     correct_answer = 0; //Кол-во правильных ответов
-    correct_wrong = true; //правильно или непарвильно
+    correct_wrong = true; //правильно или неправильно
     isList = true; //логич перемен для активации дополнительных кнопок
     stringSumma = "";
+    timeWait=timeWaitSlognost;
     for (int i = 0; i <= 19; i++) {
       massivColorLevel1[i] = Colors.blueGrey;
     }
   }
-  //---------Сброс всех значений н начальные; - Конец-------
+  //---------Сброс всех значений на начальные; - Конец-------
 
   //---------Функция сохранения пройденного уровня в памяти телефона - Начало----------------
   @override
@@ -285,15 +288,19 @@ class _Level4State extends State<Level4> {
     setState(() {
       Timer(Duration(milliseconds: 1000), () {
         timeGame = timeGame + 1;
+
         if(timeGame>5){
           bool_smile=true;
         }else{
           bool_smile=false;
         }
+        if(timeWait<=0){
+          isList=false;
+        }else{
+          time_function();
+        }
         chet_nechet=timeGame%2;
-
-
-        time_function();
+        timeWait = timeWait-1;
       });
 
       if (stopTimer == true) {
@@ -390,16 +397,31 @@ class _Level4State extends State<Level4> {
                   //------------Наименование Уровня игры - Начало------------
                   top: top_Level_text,
                   left: left_Level_text,
-                  child: Container(
-                    width: 155,
-                    padding: EdgeInsets.all(2),
-                    //color: Colors.blueGrey,
-                    child: Text(
-                      nameLevelStr + nameLevelInt.toString(),
-                      textScaleFactor: 1.5,
-                      textAlign: TextAlign.right,
-                      style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.cyan),
-                    ),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        width: 155,
+                        padding: EdgeInsets.all(2),
+                        //color: Colors.blueGrey,
+                        child: Text(
+                          nameLevelStr + nameLevelInt.toString(),
+                          textScaleFactor: 1.5,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.cyan),
+                        ),
+                      ),
+                      Container(
+                        width: 155,
+                        padding: EdgeInsets.all(2),
+                        //color: Colors.blueGrey,
+                        child: Text(
+                          timeWait.toString(),
+                          textScaleFactor: 1.5,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.cyan),
+                        ),
+                      ),
+                    ],
                   ),
                   //------------Наименование Уровня игры - Конец------------
                 ),
@@ -628,7 +650,8 @@ class _Level4State extends State<Level4> {
                                       ),
                                       borderRadius: BorderRadius.all(Radius.circular(20)),
                                     ),
-                                    child: RaisedButton(
+                                    child: isList==true && stopTimer==false ?
+                                    RaisedButton(
                                       elevation: 0.0, //убераем тень
                                       color: Colors.transparent,
                                       child: Text(
@@ -640,6 +663,20 @@ class _Level4State extends State<Level4> {
                                       onPressed: () {
                                         dischargeState(); //вызываем функцию сброса данных для логики
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => GameLivels()));
+                                      },
+                                    ):
+                                    RaisedButton(
+                                      elevation: 0.0, //убераем тень
+                                      color: Colors.transparent,
+                                      child: Text(
+                                        "Еще раз?",
+                                        textScaleFactor: 1.5,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white60),
+                                      ),
+                                      onPressed: () {
+                                        dischargeState(); //вызываем функцию сброса данных для логики
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Level4()));
                                       },
                                     ),
                                     //--------Кнопка "Следующий уровень" - Конец--------------
@@ -763,6 +800,7 @@ class _Level4State extends State<Level4> {
                                       stopTimer=false;//остнавливаем таймер
                                       timeGame=0;//сбрасываем счетчик на 0
                                       stopTimer=true;//запускаем таймер
+                                      timeWait=timeWaitSlognost;//запускаем счетчик при правильном или неправильном ответе
                                     }
                                     stringSumma = ""; //очищаем поле ввода при нажатии на ответ
                                   });
