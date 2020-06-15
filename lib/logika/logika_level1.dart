@@ -2,41 +2,41 @@
 import 'package:flutter/material.dart';
 
 class Logika_Level1 extends StatefulWidget {
+  _Logika_Level1State logika_level1State=new _Logika_Level1State();
   @override
   _Logika_Level1State createState() => _Logika_Level1State();
+  void addSymbol(symbol) {
+    logika_level1State.addSymbol(symbol);
+    print("symbol= ${symbol}");
+  }
+
+
 }
 
-//---------Массив с картинками типа ХЕШ-коллекции набор пар ключ-значение - Начало-------
-var _massivImageLevel1 ={
-  0: Image.asset("assets/img_level1/level1_0.png"),
-  1: Image.asset("assets/img_level1/level1_1.png"),
-  2: Image.asset("assets/img_level1/level1_2.png"),
-  3: Image.asset("assets/img_level1/level1_3.png"),
-  4: Image.asset("assets/img_level1/level1_4.png"),
-  5: Image.asset("assets/img_level1/level1_5.png"),
-  6: Image.asset("assets/img_level1/level1_6.png"),
-  7: Image.asset("assets/img_level1/level1_7.png"),
-  8: Image.asset("assets/img_level1/level1_8.png"),
-  9: Image.asset("assets/img_level1/level1_9.png"),
-};
-//---------Массив с картинками типа ХЕШ-коллекции набор пар ключ-значение - Конец-------
+String stringSumma = " "; //для последующего преобразования из текстового контроллера в int
 
-//---------Массив с Текстом типа ХЕШ-коллекции набор пар ключ-значение - Начало-------
-var _massivTextLevel1 ={
-  0: "Ноль",
-  1: "Один",
-  2: "Два",
-  3: "Три",
-  4: "Четыре",
-  5: "Пять",
-  6: "Шесть",
-  7: "Семь",
-  8: "Восемь",
-  9: "Девять",
-};
-//---------Массив с Текстом типа ХЕШ-коллекции набор пар ключ-значение - Конец-------
+
+
+
 
 class _Logika_Level1State extends State<Logika_Level1> {
+
+//--------Функция при нажатии цифр для получения ответа - Начало-------
+
+  void addSymbol(symbol) {
+//    setState(() {
+      if (stringSumma == "") {
+        stringSumma = symbol;
+      } else {
+        stringSumma += symbol;
+      }
+//    });
+
+  }
+
+//--------Функция при нажатии цифр для получения ответа - Конец-------
+
+
   @override
   Widget build(BuildContext context) {
     return Container();

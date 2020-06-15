@@ -3,7 +3,9 @@ import 'package:quiz/dialog/previevwdialog_3.dart';
 import 'package:quiz/dialog/previewdialog.dart';
 import 'package:quiz/dialog/previewdialog_2.dart';
 import 'package:quiz/dialog/previewdialog_4.dart';
+import 'package:quiz/dialog/previewdialog_6.dart';
 import 'package:quiz/levels/level1.dart';
+import 'package:quiz/levels/livel6.dart';
 import 'package:quiz/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -73,7 +75,7 @@ class _GameLivelsState extends State<GameLivels> {
   void checkLevel() async{
     SharedPreferences pref=await SharedPreferences.getInstance();
     check=pref.getInt("Level_completed");//присваеваем переменной номер пройденного уровня
-//    check=3;//это если при отладке мы хотим поменять уровень игры
+    check=6;//это если при отладке мы хотим поменять уровень игры
     if (check==0){check=1;}
     for(int i=0; i<=29; i++){
       if(i<check){
@@ -185,8 +187,8 @@ class _GameLivelsState extends State<GameLivels> {
 
                       TableRow(
                           children: [
-                            gameLevelButton("6",massivColorLevel[5], Level1(),6),
-                            gameLevelButton("7",massivColorLevel[6], Level1(),7),
+                            gameLevelButton("6",massivColorLevel[5], PreviewDialog_6(),6),
+                            gameLevelButton("7",massivColorLevel[6], PreviewDialog_4(),7),
                             gameLevelButton("8",massivColorLevel[7], Level1(),8),
                             gameLevelButton("9",massivColorLevel[8], Level1(),9),
                             gameLevelButton("10",massivColorLevel[9], Level1(),10),

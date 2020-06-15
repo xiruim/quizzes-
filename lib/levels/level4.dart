@@ -1,18 +1,33 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
+import 'package:quiz/logika/my_bloc.dart';
+import 'package:quiz/logika/my_event.dart';
+import 'package:quiz/logika/my_model.dart';
+import 'package:quiz/logika/my_provider.dart';
 import 'package:quiz/logika/save_uroven_in_memoru.dart';
+import 'package:quiz/logika/taimer_prostoi_stop.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz/logika/logika_level1.dart';
 import 'dart:core';
+import 'package:soundpool/soundpool.dart';
 
 import '../gamelivels.dart';
 
 class Level4 extends StatefulWidget {
+
+  static My_Model my_model=new My_Model(); //Вызываем модель
+
   @override
   _Level4State createState() => _Level4State();
+
+
 }
+
+Logika_Level1 _logika_level1=Logika_Level1();//Вызываем логику
+
+
 
 //--------Текстовые переменные - Начало-------
 String nameLevelStr = "Уровень: ";
@@ -34,22 +49,22 @@ int correct_answer = 0; //Кол-во правильных ответов
 bool correct_wrong = true; //правильно или непарвильно
 bool isList = true; //логич перемен для активации дополнительных кнопок
 bool stopTimer = true; //логич перемен для счетчика времени
-bool bool_smile=true;// - для показа разных смайликов
+bool bool_smile = true; // - для показа разных смайликов
 int level_of_difficulty; //уровень сложности игры (1, 2 или 3)
-double timeGame = 0; //переменная для посчета времени игры
-double timeWaitSlognost=10;//переменная для задания отсчета обратного времени
-double timeWait=timeWaitSlognost;//переменная для отсчета обратного времени
-double chet_nechet=0;//для определения четное не четное
+int timeGame = 0; //переменная для посчета времени игры
+int timeWaitSlognost = 10; //переменная для задания отсчета обратного времени
+int timeWait = timeWaitSlognost; //переменная для отсчета обратного времени
+int chet_nechet = 0; //для определения четное не четное
 
 //--------Переменные для логики - Конец---------
 
 //--------Переменные с картинками-------
-String first_img="assets/main_img_smail.png";
-String fon_img="assets/level1.jpg";
-String img_smail_tru="assets/img_smile/good _smail.png";
-String img_smail_false="assets/img_smile/question_smail.png";
-String img_smail_wait1="assets/img_smile/repeat_smail.png";
-String img_smail_wait2="assets/img_smile/repeat2_smail.png";
+String first_img = "assets/main_img_smail.png";
+String fon_img = "assets/level1.jpg";
+String img_smail_tru = "assets/img_smile/good _smail.png";
+String img_smail_false = "assets/img_smile/question_smail.png";
+String img_smail_wait1 = "assets/img_smile/repeat_smail.png";
+String img_smail_wait2 = "assets/img_smile/repeat2_smail.png";
 
 //--------Переменные размещения на экране - Начало--------
 
@@ -149,15 +164,15 @@ var massivColorLevel1 = {
 };
 //---------Массив с Color типа ХЕШ-коллекции набор пар ключ-значение для полосы пройденных вопросов - Конец-------
 
-//--------Функция генерации цифр от 0 до 9 - Начало-------
-void randomLeftRight() {
-  numLeft = random.nextInt(10); //Генерируем цифры от 0 до 9
-  numRight = random.nextInt(10); //Генерируем цифры от 0 до 9
-//  if (numLeft == numRight) {
-//    randomLeftRight();
-//  }
-}
-//--------Функция генерации цифр от 0 до 9 - Конец-------
+////--------Функция генерации цифр от 0 до 9 - Начало-------
+//void randomLeftRight() {
+//  numLeft = random.nextInt(10); //Генерируем цифры от 0 до 9
+//  numRight = random.nextInt(10); //Генерируем цифры от 0 до 9
+////  if (numLeft == numRight) {
+////    randomLeftRight();
+////  }
+//}
+////--------Функция генерации цифр от 0 до 9 - Конец-------
 
 //---Начало---Общий виджет полоса пройденных вопросов-------
 Widget gameLevel(massivColorLevel1) {
@@ -180,66 +195,60 @@ Widget gameLevel(massivColorLevel1) {
 }
 //---Конец---Общий виджет полоса пройденных вопросов-------
 
-//-----Общий виджет кнопок с цифрами ответа ---- Начало---
-Widget numButton(String text, Function onPress) {
-  return InkWell(
-    onTap: () {
-      onPress();
-    },
-    child: Container(
-      width: 40,
-      height: 50,
-      padding: EdgeInsets.all(2),
-      margin: EdgeInsets.all(2),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        border: Border.all(
-          color: Colors.white,
-          width: 2,
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Text(
-        text,
-        textScaleFactor: 1.5,
-        style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
-      ),
-    ),
-  );
-}
 
-//-----Общий виджет кнопок с цифрами ответа ---- Конец---
 
 class _Level4State extends State<Level4> {
   SaveUrovenInMemoru _saveUrovenInMemoru = SaveUrovenInMemoru(); // Вызываем класс записи в память
+//  TaimProstoiStop _taimProstoiStop=TaimProstoiStop();//Вызываем класс Таймера простоя времени
 
   //--------Задаем ключи - Начало----------
   final _rowKey = GlobalKey<ScaffoldState>();
   //--------Задаем ключи - Конец----------
 
+  StreamSubscription streamSubscription;//Вызываем поток
+
   //---------При входе на данный уровень игры обращаемся через данную функцию к функции генерации случайных чисел randomLeftRight(); - Начало-------
 
   @override
   void initState() {
-    super.initState();
-    randomLeftRight();
-    dischargeState();
-    slognostLevel();
+
+    streamSubscription=Level4.my_model.randomLeftUpdate.listen((newNumLeft)=>setState((){
+      numLeft=newNumLeft;
+      print("numLeft=${numLeft}");//проверка
+
+    }));
+    streamSubscription=Level4.my_model.randomRightUpdate.listen((newNumRight)=>setState((){
+      numRight=newNumRight;
+
+    }));
+    _saveUrovenInMemoru.slognostLevel(level_of_difficulty);
     time_function();
+    super.initState();
+    streamSubscription?.cancel();//Вроде как закрываем поток
+
+
   }
   //---------При входе на данный уровень игры обращаемся через данную функцию к функции генерации случайных чисел randomLeftRight(); - Конец-------
 
-  //---------Функция проверки сложности уровня - Начало-------
-  @override
-  void slognostLevel() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    level_of_difficulty = pref.getInt("Uroven_slognosti"); //присваеваем переменной уровень сложности
 
-    print("Уровень сложности");
-    print(level_of_difficulty);
+  //---------Для закрытия потока - Начало-------
+  @override
+  void dispose(){
+    streamSubscription?.cancel();//Вроде как закрываем поток
+    super.dispose();
   }
-  //---------Функция проверки сложности уровня - Конец-------
+  //---------Для закрытия потока - Конец-------
+
+//  //---------Функция проверки сложности уровня - Начало-------
+//  @override
+//  void slognostLevel() async {
+//    SharedPreferences pref = await SharedPreferences.getInstance();
+//    level_of_difficulty = pref.getInt("Uroven_slognosti"); //присваеваем переменной уровень сложности
+//
+//    print("Уровень сложности");
+//    print(level_of_difficulty);
+//  }
+//  //---------Функция проверки сложности уровня - Конец-------
 
   //---------Сброс всех значений на начальные; - Начало-------
 
@@ -250,24 +259,57 @@ class _Level4State extends State<Level4> {
     correct_wrong = true; //правильно или неправильно
     isList = true; //логич перемен для активации дополнительных кнопок
     stringSumma = "";
-    timeWait=timeWaitSlognost;
+    timeGame = 0;
+    timeWait = timeWaitSlognost;
     for (int i = 0; i <= 19; i++) {
       massivColorLevel1[i] = Colors.blueGrey;
     }
   }
   //---------Сброс всех значений на начальные; - Конец-------
 
-  //---------Функция сохранения пройденного уровня в памяти телефона - Начало----------------
-  @override
-  void saveInMemory() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt("Level_completed", nameLevelInt + 1); //открываем следующий уровень и сохраняем в памяти телефона
-    print("nameLevelInt ");
-    print(nameLevelInt);
+//  //---------Функция сохранения пройденного уровня в памяти телефона - Начало----------------
+//  @override
+//  void saveInMemory() async {
+//    SharedPreferences prefs = await SharedPreferences.getInstance();
+//    await prefs.setInt("Level_completed", nameLevelInt + 1); //открываем следующий уровень и сохраняем в памяти телефона
+//    print("nameLevelInt ");
+//    print(nameLevelInt);
+//  }
+//  //---------Функция сохранения пройденного уровня в памяти телефона - Конец----------------
+
+  //-----Общий виджет кнопок с цифрами ответа ---- Начало---
+  Widget numButton(String text, Function onPress) {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          onPress();
+        });
+
+      },
+      child: Container(
+        width: 40,
+        height: 50,
+        padding: EdgeInsets.all(2),
+        margin: EdgeInsets.all(2),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          border: Border.all(
+            color: Colors.white,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        child: Text(
+          text,
+          textScaleFactor: 1.5,
+          style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
+        ),
+      ),
+    );
   }
-  //---------Функция сохранения пройденного уровня в памяти телефона - Конец----------------
 
-
+//-----Общий виджет кнопок с цифрами ответа ---- Конец---
 
 //--------Функция при нажатии цифр для получения ответа - Начало-------
   void addSymbol(symbol) {
@@ -282,44 +324,54 @@ class _Level4State extends State<Level4> {
 
 //--------Функция при нажатии цифр для получения ответа - Конец-------
 
-
   //+++++++++++Функция подсчет времени простоя игры  - Начало------
   Future time_function() async {
     setState(() {
       Timer(Duration(milliseconds: 1000), () {
         timeGame = timeGame + 1;
-
-        if(timeGame>5){
-          bool_smile=true;
-        }else{
-          bool_smile=false;
+        if (timeGame > 3) {
+          bool_smile = true;
+        } else {
+          bool_smile = false;
         }
-        if(timeWait<=0){
-          isList=false;
-        }else{
+        if (timeWait <= 0) {
+          isList = false;
+          print("STOP GAME, isList=${isList} ");
+        } else {
           time_function();
         }
-        chet_nechet=timeGame%2;
-        timeWait = timeWait-1;
+        chet_nechet = timeGame % 2;
+        timeWait = timeWait - 1;
+
       });
+      if (n == 20 || timeWait <= 0) {
+        isList = false;
+        FocusScope.of(context).requestFocus(new FocusNode());
+        if ((n - correct_answer) <= level_of_difficulty) {
+          //если уровень пройден
+          _rowKey.currentState.showSnackBar(
+              SnackBar(content: Text("Поздравляю!!! Уровень пройден. Вы правильно ответили на " + correct_answer.toString() + " вопросов из " + (n).toString())));
+          _saveUrovenInMemoru.saveInMemory(nameLevelInt); // вызывем функцию сохранения пройденного уровеня в памяти телефона
+        } else {
+          _rowKey.currentState.showSnackBar(
+              SnackBar(content: Text("Уровень не пройден!!! Вы правильно ответили только на " + correct_answer.toString() + " вопросов из " + (n).toString())));
+        }
+      }
 
       if (stopTimer == true) {
-        print("Время игры ${timeGame}, ${stopTimer} ");
-
+        print("timeGame=${timeGame}, stopTimer=${stopTimer}, timeWait=${timeWait}, isList=${isList} ");
       }
     });
   }
 
 //+++++++++++Функция подсчет времени простоя игры - Конец------
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _rowKey,
       body: Center(
-        child: ListView(
-          children: <Widget>[
+        child:
             Stack(
               children: <Widget>[
                 //-----------Фоновое изображение - Начало----------
@@ -329,29 +381,33 @@ class _Level4State extends State<Level4> {
                 //-----------Фоновое изображение - Конец----------
                 Positioned(
                   //-------Смайлик ----- Начало--
-                  top: top_Button_Nazad-70,
-                  left: left_Button_Nazad+70,
-                  child: bool_smile ?
+                  top: top_Button_Nazad - 70,
+                  left: left_Button_Nazad + 70,
+                  child: bool_smile
+                      ?
                       //------Смайлик ожидания - Начало---
-                  Container(
-                    width: 200,
-                    height: 200,
-                    child: chet_nechet==0 ?
-                    Image.asset(img_smail_wait1,)
-                        :
-                    Image.asset(img_smail_wait2),
-                  ):
-                  //------Смайлик ожидания - Конец---
+                      Container(
+                          width: 200,
+                          height: 200,
+                          child: chet_nechet == 0
+                              ? Image.asset(
+                                  img_smail_wait1,
+                                )
+                              : Image.asset(img_smail_wait2),
+                        )
+                      :
+                      //------Смайлик ожидания - Конец---
 
-                  //------Смайлик правильного или не правильного ответа - Начало---
-                  Container(
-                    width: 200,
-                    height: 200,
-                    child: correct_wrong ?
-                    Image.asset(img_smail_tru,)
-                        :
-                    Image.asset(img_smail_false),
-                  ),
+                      //------Смайлик правильного или не правильного ответа - Начало---
+                      Container(
+                          width: 200,
+                          height: 200,
+                          child: correct_wrong
+                              ? Image.asset(
+                                  img_smail_tru,
+                                )
+                              : Image.asset(img_smail_false),
+                        ),
                   //------Смайлик правильного или не правильного ответа - Начало---
                   //-------Смайлик ----- Конец--
                 ),
@@ -360,17 +416,10 @@ class _Level4State extends State<Level4> {
                   top: top_Button_Nazad,
                   left: left_Button_Nazad,
                   child: Container(
-//                    width: width_Button_Nazad,
-//                    height: height_Button_Nazad,
                     padding: EdgeInsets.all(2),
                     margin: EdgeInsets.all(2),
                     decoration: BoxDecoration(
                       color: Colors.transparent,
-//                      border: Border.all(
-//                        color: Colors.white,
-//                        width: 2,
-//                      ),
-//                      borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     child: RaisedButton(
                       elevation: 0.0, //убераем тень
@@ -379,12 +428,6 @@ class _Level4State extends State<Level4> {
                         Icons.backspace,
                         color: Colors.white,
                       ),
-//                      child: Text(
-//                        "НАЗАД",
-//                        textScaleFactor: 1.5,
-//                        textAlign: TextAlign.center,
-//                        style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
-//                      ),
                       onPressed: () {
                         dischargeState();
                         Navigator.push(context, MaterialPageRoute(builder: (context) => GameLivels()));
@@ -394,7 +437,7 @@ class _Level4State extends State<Level4> {
                   //----------Кнопка назад - Конец--------------
                 ),
                 Positioned(
-                  //------------Наименование Уровня игры - Начало------------
+                  //------------Наименование Уровня игры и времени обратного отсчета - Начало------------
                   top: top_Level_text,
                   left: left_Level_text,
                   child: Column(
@@ -423,7 +466,7 @@ class _Level4State extends State<Level4> {
                       ),
                     ],
                   ),
-                  //------------Наименование Уровня игры - Конец------------
+                  //------------Наименование Уровня игры и времени обратного отсчета - Конец------------
                 ),
                 Positioned(
                   //------------Полоса уровня - Начало---------------
@@ -637,7 +680,7 @@ class _Level4State extends State<Level4> {
                                     //--------Кнопка "Повторить" - Конец--------------
                                   ),
                                   Container(
-                                    //--------Кнопка "Следующий уровень" - Начало--------------
+                                    //--------Кнопка "Следующий уровень/Еще раз" - Начало--------------
                                     width: width_Button_Nazad,
                                     height: height_Button_Nazad,
                                     padding: EdgeInsets.all(5),
@@ -650,33 +693,18 @@ class _Level4State extends State<Level4> {
                                       ),
                                       borderRadius: BorderRadius.all(Radius.circular(20)),
                                     ),
-                                    child: isList==true && stopTimer==false ?
-                                    RaisedButton(
+                                    child: RaisedButton(
                                       elevation: 0.0, //убераем тень
                                       color: Colors.transparent,
                                       child: Text(
-                                        "Следующий уровень",
+                                        isList == true && stopTimer == false ? "Следующий уровень" : "Уровень не пройден",
                                         textScaleFactor: 1.0,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                                       ),
                                       onPressed: () {
                                         dischargeState(); //вызываем функцию сброса данных для логики
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => GameLivels()));
-                                      },
-                                    ):
-                                    RaisedButton(
-                                      elevation: 0.0, //убераем тень
-                                      color: Colors.transparent,
-                                      child: Text(
-                                        "Еще раз?",
-                                        textScaleFactor: 1.5,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white60),
-                                      ),
-                                      onPressed: () {
-                                        dischargeState(); //вызываем функцию сброса данных для логики
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Level4()));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => isList == true && stopTimer == false ? GameLivels() : Level4()));
                                       },
                                     ),
                                     //--------Кнопка "Следующий уровень" - Конец--------------
@@ -781,26 +809,13 @@ class _Level4State extends State<Level4> {
                                         massivColorLevel1[n] = Colors.red; //присваиваем красный - неправильно
                                       }
                                       n++; //переходим к следующему вопросу
-                                      randomLeftRight();
-//                                contSumma.text = ""; //очищаем поле ввода при нажатии на ответ
+                                      My_Model.my_model.randomLeft;
+                                      My_Model.my_model.randomRight;
 
-                                      if (n == 20) {
-                                        isList = false;
-                                        FocusScope.of(context).requestFocus(new FocusNode());
-                                        if ((n - correct_answer) <= level_of_difficulty) {
-                                          //если уровень пройден
-                                          _rowKey.currentState.showSnackBar(
-                                              SnackBar(content: Text("Поздравляю!!! Уровень пройден. Вы правильно ответили на " + correct_answer.toString() + " вопросов из " + (n).toString())));
-                                          saveInMemory(); // вызывем функцию сохранения пройденного уровеня в памяти телефона
-                                        } else {
-                                          _rowKey.currentState.showSnackBar(
-                                              SnackBar(content: Text("Уровень не пройден!!! Вы правильно ответили только на " + correct_answer.toString() + " вопросов из " + (n).toString())));
-                                        }
-                                      }
-                                      stopTimer=false;//остнавливаем таймер
-                                      timeGame=0;//сбрасываем счетчик на 0
-                                      stopTimer=true;//запускаем таймер
-                                      timeWait=timeWaitSlognost;//запускаем счетчик при правильном или неправильном ответе
+                                      stopTimer = false; //остнавливаем таймер
+                                      timeGame = 0; //сбрасываем счетчик на 0
+                                      stopTimer = true; //запускаем таймер
+                                      timeWait = timeWaitSlognost; //запускаем счетчик при правильном или неправильном ответе
                                     }
                                     stringSumma = ""; //очищаем поле ввода при нажатии на ответ
                                   });
@@ -808,15 +823,13 @@ class _Level4State extends State<Level4> {
                               ),
                             ),
                             //-----Кнопка ответа - Конец ---------------
-                            //-----------Форма ввода ответа под картинками - Начало---------------
+                            //-----------Форма ввода ответа под картинками - Конец---------------
                           ],
                         )
-                      : Row(),
+                      : Row(), //После окончания игры цифры исчезают
                 ),
               ],
             ),
-          ],
-        ),
       ),
     );
   }
