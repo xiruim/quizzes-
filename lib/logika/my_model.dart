@@ -22,7 +22,7 @@ class My_Model
   void randomLeft() {
    numLeft = random.nextInt(10); //Генерируем цифры от 0 до 9
     _streamLeftController.add(numLeft);
-    print("my_provider numL ${numLeft} ");
+    print("my_model numL ${numLeft} ");
 
   }
 //--------Функция генерации Левых цифр от 0 до 9 - Конец-------
@@ -31,7 +31,7 @@ class My_Model
   void randomRight() {
     numRight = random.nextInt(10); //Генерируем цифры от 0 до 9
     _streamRightController.add(numRight);
-    print("my_provider numR ${numRight} ");
+    print("my_model numR ${numRight} ");
 
   }
 //--------Функция генерации Правых цифр от 0 до 9 - Конец-------

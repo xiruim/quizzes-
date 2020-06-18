@@ -33,7 +33,7 @@ int numLeft=0; //Переменная для левой картинки
 int numRight=0; //Переменная для правой картинки
 int intSummaLR;
 int intSummaParse;
-Logika_Level1 logika_level1 = new Logika_Level1(); //Создали новый объект из класса Logika_Level1
+//Logika_Level1 logika_level1 = new Logika_Level1(); //Создали новый объект из класса Logika_Level1
 Random random = new Random(); //Для генерации случайных чисел
 int n = 0; //Учавствует в цикле из 20 задний
 int correct_answer = 0; //Кол-во правильных ответов
@@ -194,7 +194,7 @@ class _Level4State extends State<Level4> {
   final _rowKey = GlobalKey<ScaffoldState>();
   //--------Задаем ключи - Конец----------
 
-  StreamSubscription streamSubscription; //Вызываем поток
+
 
 
   //---------При входе на данный уровень игры обращаемся через данную функцию к функции генерации случайных чисел randomLeftRight(); - Начало-------
@@ -205,7 +205,7 @@ class _Level4State extends State<Level4> {
     _saveUrovenInMemoru.slognostLevel(level_of_difficulty);
     time_function();
 
-    super.initState();
+//    super.initState();
   }
   //---------При входе на данный уровень игры обращаемся через данную функцию к функции генерации случайных чисел randomLeftRight(); - Конец-------
 
@@ -217,10 +217,11 @@ class _Level4State extends State<Level4> {
   }
   //---------Для закрытия потока - Конец-------
   //---------Проверка потока - Начало-------
+  StreamSubscription streamSubscription; //Вызываем поток
   @override
   void potok() {
-    Level4.my_model.randomLeft;
-    Level4.my_model.randomRight;
+    Level4.my_model.randomLeft();
+    Level4.my_model.randomRight();
     streamSubscription = Level4.my_model.randomLeftUpdate.listen((newNumLeft) => setState(() {
       numLeft = newNumLeft;
       print("numLeft=${numLeft}"); //проверка
@@ -257,6 +258,7 @@ class _Level4State extends State<Level4> {
     for (int i = 0; i <= 19; i++) {
       massivColorLevel1[i] = Colors.blueGrey;
     }
+
   }
   //---------Сброс всех значений на начальные; - Конец-------
 
@@ -692,6 +694,7 @@ class _Level4State extends State<Level4> {
                                   ),
                                   onPressed: () {
                                     dischargeState(); //вызываем функцию сброса данных для логики
+                                    dispose();
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => isList == true && stopTimer == false ? GameLivels() : Level4()));
                                   },
                                 ),
@@ -797,7 +800,8 @@ class _Level4State extends State<Level4> {
                                     massivColorLevel1[n] = Colors.red; //присваиваем красный - неправильно
                                   }
                                   n++; //переходим к следующему вопросу
-//                                  My_Model.my_model.randomRight;
+                                  Level4.my_model.randomLeft();
+                                  Level4.my_model.randomRight();
 
                                   stopTimer = false; //остнавливаем таймер
                                   timeGame = 0; //сбрасываем счетчик на 0
