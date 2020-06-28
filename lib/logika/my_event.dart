@@ -1,15 +1,15 @@
-import 'package:flutter/material.dart';
+//import 'package:flutter/material.dart';
 
 abstract class MyEvent {}
 
 //функция возврщающя значения при подборе случайного числа для Левой цифры
 class RandomLeftEvent extends MyEvent {
-  int numLeft; //значение
-  RandomLeftEvent(this.numLeft); //которое будет возвращаться
+  int numLeftevent; //значение
+  RandomLeftEvent(this.numLeftevent); //которое будет возвращаться
+
   @override
   String toString() {
-    // TODO: implement toString
-    print("my_event numL/R ${numLeft} ");
+    print("my_event numL ${numLeftevent} ");
     return "";
   }
 }
@@ -21,8 +21,7 @@ class RandomRightEvent extends MyEvent {
 
   @override
   String toString() {
-    // TODO: implement toString
-    print("my_event numL/R  ${numRight}");
+    print("my_event numR  ${numRight}");
     return "";
   }
 }

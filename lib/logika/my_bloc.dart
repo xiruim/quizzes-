@@ -1,11 +1,11 @@
 
 
-
+import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:quiz/logika/my_repositories.dart';
 import 'package:quiz/logika/my_state.dart';
+import 'package:quiz/logika/my_event.dart';
 
-import 'my_event.dart';
 
 class MyBloc extends Bloc<MyEvent, MyState>{
   MyRepositories _myRepositories=MyRepositories();
@@ -14,19 +14,24 @@ class MyBloc extends Bloc<MyEvent, MyState>{
 
 
   Stream<MyState> mapEventToState(MyEvent event) async*{
+//    print("event= ${event}");
     try{
       if(event is RandomLeftEvent){
-        int numLeft=_myRepositories.randomLeft(event.numLeft);
-        print("my_bloc numL ${numLeft}");
-        yield RandomLeftState(numLeft);
+        yield LoadingState();
+//        await Future.delayed(const Duration(seconds: 1), ()=> "1");//делаем задержку для наглядности
+        int numLeftbloc=_myRepositories.randomLeftRepos(event.numLeftevent);
+        yield RandomLeftState(numLeftbloc);
+        print("my_bloc numL ${numLeftbloc}");
 
       }else if(event is RandomRightEvent){
-        int numRight=_myRepositories.randomRight(event.numRight);
-        print("my_bloc numL ${numRight}");
+        yield LoadingState();
+        int numRight=_myRepositories.randomRightRepos(event.numRight);
+//        print("my_bloc numR ${numRight}");
         yield RandomRightState(numRight);
       }
 
     } catch(err){
+      print("ErrState ${err}");
       yield ErrState(err);
     }
   }

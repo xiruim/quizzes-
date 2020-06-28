@@ -26,11 +26,11 @@ class LoadingState extends MyState {
 
 //функция которая возвращаает значение для Левых цифр
 class RandomLeftState extends MyState {
-  int numLeft; //значение
-  RandomLeftState(this.numLeft); //которое будет возвращаться
+  int numLeftstate; //значение
+  RandomLeftState(this.numLeftstate); //которое будет возвращаться
   @override
   String toString() {
-    print("my_state numL/R ${numLeft}");
+    print("my_state numL/R ${numLeftstate}");
     return "";
   }
 }

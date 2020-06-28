@@ -1,284 +1,50 @@
-import 'dart:async';
-import 'dart:math';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quiz/logika/my_bloc.dart';
 import 'package:quiz/logika/my_event.dart';
-import 'package:quiz/logika/my_model.dart';
-import 'package:quiz/logika/save_uroven_in_memoru.dart';
-import 'package:flutter/material.dart';
-import 'package:quiz/logika/logika_level1.dart';
-import 'dart:core';
+import 'package:quiz/logika/my_state.dart';
+import 'package:quiz/logika/my_vars.dart';
+
 import '../gamelivels.dart';
 
-
-class Level4 extends StatefulWidget {
-  static My_Model my_model = new My_Model(); //Вызываем модель
-
+class Level4_1 extends StatefulWidget {
   @override
-  _Level4State createState() => _Level4State();
-
-
+  _Level4_1State createState() => _Level4_1State();
 }
 
-Logika_Level1 _logika_level1 = Logika_Level1(); //Вызываем логику
-
-//--------Текстовые переменные - Начало-------
-String nameLevelStr = "Уровень: ";
-int nameLevelInt = 4;
-String text = ""; //пустой текск в полосе пройденных вопросов
-TextEditingController contSumma = TextEditingController(); //контроллер хранения суммы вводимой игроком
-String stringSumma = " "; //для последующего преобразования из текстового контроллера в int
-//--------Текстовые переменные - Конец--------
-
-//--------Переменные для логики - Начало---------
-int numLeft=0; //Переменная для левой картинки
-int numRight=0; //Переменная для правой картинки
-int intSummaLR;
-int intSummaParse;
-//Logika_Level1 logika_level1 = new Logika_Level1(); //Создали новый объект из класса Logika_Level1
-Random random = new Random(); //Для генерации случайных чисел
-int n = 0; //Учавствует в цикле из 20 задний
-int correct_answer = 0; //Кол-во правильных ответов
-bool correct_wrong = true; //правильно или непарвильно
-bool isList = true; //логич перемен для активации дополнительных кнопок
-bool stopTimer = true; //логич перемен для счетчика времени
-bool bool_smile = true; // - для показа разных смайликов
-int level_of_difficulty; //уровень сложности игры (1, 2 или 3)
-int timeGame = 0; //переменная для посчета времени игры
-int timeWaitSlognost = 10; //переменная для задания отсчета обратного времени
-int timeWait = timeWaitSlognost; //переменная для отсчета обратного времени
-int chet_nechet = 0; //для определения четное не четное
-
-//--------Переменные для логики - Конец---------
-
-//--------Переменные с картинками-------
-String first_img = "assets/main_img_smail.png";
-String fon_img = "assets/level1.jpg";
-String img_smail_tru = "assets/img_smile/good _smail.png";
-String img_smail_false = "assets/img_smile/question_smail.png";
-String img_smail_wait1 = "assets/img_smile/repeat_smail.png";
-String img_smail_wait2 = "assets/img_smile/repeat2_smail.png";
-
-//--------Переменные размещения на экране - Начало--------
-
-double width_Polosa = 20; //Размер одной ячейки в общей полоске выполненых задний
-double height_Polosa = 7; //Размер одной ячейки в общей полоске выполненых задний
-
-double width_Button_Nazad = 120; //Размер одной ячейки в общей полоске выполненых задний
-double height_Button_Nazad = 50; //Размер одной ячейки в общей полоске выполненых задний
-
-double top_Dobavka = 30; //Добавка к основным величинам от верха экрана
-double top_Button_Nazad = 80.0; //Начальное положение кнопки "НАЗАД" от верха экрана
-double top_Level_text = 95; //Начальное положение кнопки "НАЗАД" от верха экрана
-double top_Polosa = 140 + top_Dobavka; //Начальное положение полоски выполненных задний от верха экрана
-double top_Contaner_Imags = 155 + top_Dobavka; //Начальное положение контейнера с картинками игры от верха экрана
-
-double left_Button_Nazad = 10.0; //Начальное положение кнопки "НАЗАД" от левого края
-double left_Level_text = 200; //Начальное положение кнопки "НАЗАД" от левого края
-//--------Переменные размещения на экране - Конец--------
-
-//---------Массив с картинками типа ХЕШ-коллекции набор пар ключ-значение - Начало-------
-var _massivImageLevel1 = {
-  0: Image.asset("assets/img_level1/level1_0.png"),
-  1: Image.asset("assets/img_level1/level1_1.png"),
-  2: Image.asset("assets/img_level1/level1_2.png"),
-  3: Image.asset("assets/img_level1/level1_3.png"),
-  4: Image.asset("assets/img_level1/level1_4.png"),
-  5: Image.asset("assets/img_level1/level1_5.png"),
-  6: Image.asset("assets/img_level1/level1_6.png"),
-  7: Image.asset("assets/img_level1/level1_7.png"),
-  8: Image.asset("assets/img_level1/level1_8.png"),
-  9: Image.asset("assets/img_level1/level1_9.png"),
-};
-//---------Массив с картинками типа ХЕШ-коллекции набор пар ключ-значение - Конец-------
-
-//---------Массив с Текстом типа ХЕШ-коллекции набор пар ключ-значение - Начало-------
-var _massivTextLevel1 = {
-  0: "Ноль",
-  1: "Один",
-  2: "Два",
-  3: "Три",
-  4: "Четыре",
-  5: "Пять",
-  6: "Шесть",
-  7: "Семь",
-  8: "Восемь",
-  9: "Девять",
-};
-//---------Массив с Текстом типа ХЕШ-коллекции набор пар ключ-значение - Конец-------
-
-//---------Массив с bool типа ХЕШ-коллекции набор пар ключ-значение для полосы пройденных вопросов - Начало-------
-var massivBoolLevel1 = {
-  0: true,
-  1: true,
-  2: true,
-  3: true,
-  4: true,
-  5: true,
-  6: true,
-  7: true,
-  8: true,
-  9: true,
-  10: true,
-  11: true,
-  12: true,
-  13: true,
-  14: true,
-  15: true,
-  16: true,
-  17: true,
-  18: true,
-  19: true,
-};
-//---------Массив с bool типа ХЕШ-коллекции набор пар ключ-значение для полосы пройденных вопросов - Конец-------
-
-//---------Массив с Color типа ХЕШ-коллекции набор пар ключ-значение для полосы пройденных вопросов - Начало-------
-var massivColorLevel1 = {
-  0: Colors.blueGrey,
-  1: Colors.blueGrey,
-  2: Colors.blueGrey,
-  3: Colors.blueGrey,
-  4: Colors.blueGrey,
-  5: Colors.blueGrey,
-  6: Colors.blueGrey,
-  7: Colors.blueGrey,
-  8: Colors.blueGrey,
-  9: Colors.blueGrey,
-  10: Colors.blueGrey,
-  11: Colors.blueGrey,
-  12: Colors.blueGrey,
-  13: Colors.blueGrey,
-  14: Colors.blueGrey,
-  15: Colors.blueGrey,
-  16: Colors.blueGrey,
-  17: Colors.blueGrey,
-  18: Colors.blueGrey,
-  19: Colors.blueGrey,
-};
-//---------Массив с Color типа ХЕШ-коллекции набор пар ключ-значение для полосы пройденных вопросов - Конец-------
-
-////--------Функция генерации цифр от 0 до 9 - Начало-------
-//void randomLeftRight() {
-//  numLeft = random.nextInt(10); //Генерируем цифры от 0 до 9
-//  numRight = random.nextInt(10); //Генерируем цифры от 0 до 9
-////  if (numLeft == numRight) {
-////    randomLeftRight();
-////  }
-//}
-////--------Функция генерации цифр от 0 до 9 - Конец-------
-
-//---Начало---Общий виджет полоса пройденных вопросов-------
-Widget gameLevel(massivColorLevel1) {
-  return Container(
-    decoration: BoxDecoration(
-      color: massivColorLevel1,
-      boxShadow: [BoxShadow(blurRadius: 1.0)],
-      borderRadius: BorderRadius.all(Radius.circular(2)),
-      border: Border.all(width: 1, color: Colors.black12),
-    ),
-    alignment: Alignment.center,
-    margin: EdgeInsets.all(1),
-    width: width_Polosa,
-    height: height_Polosa,
-    child: Text(
-      "",
-      style: TextStyle(fontSize: 2, fontWeight: FontWeight.bold, color: Colors.white),
-    ),
-  );
-}
-//---Конец---Общий виджет полоса пройденных вопросов-------
-
-class _Level4State extends State<Level4> {
+class _Level4_1State extends State<Level4_1> {
   MyBloc _myBloc;
-  SaveUrovenInMemoru _saveUrovenInMemoru = SaveUrovenInMemoru(); // Вызываем класс записи в память
-//  TaimProstoiStop _taimProstoiStop=TaimProstoiStop();//Вызываем класс Таймера простоя времени
-
-  //--------Задаем ключи - Начало----------
-  final _rowKey = GlobalKey<ScaffoldState>();
-  //--------Задаем ключи - Конец----------
-
-
-
-
-  //---------При входе на данный уровень игры обращаемся через данную функцию к функции генерации случайных чисел randomLeftRight(); - Начало-------
 
   @override
   void initState() {
-    potok();
-    _saveUrovenInMemoru.slognostLevel(level_of_difficulty);
-    time_function();
-
-//    super.initState();
+    // TODO: implement initState
+    super.initState();
+    _myBloc = MyBloc();
   }
-  //---------При входе на данный уровень игры обращаемся через данную функцию к функции генерации случайных чисел randomLeftRight(); - Конец-------
 
-  //---------Для закрытия потока - Начало-------
   @override
   void dispose() {
-    streamSubscription?.cancel(); //Вроде как закрываем поток
+    // TODO: implement dispose
+    _myBloc.dispose();
     super.dispose();
   }
-  //---------Для закрытия потока - Конец-------
-  //---------Проверка потока - Начало-------
-  StreamSubscription streamSubscription; //Вызываем поток
-  @override
-  void potok() {
 
-    Level4.my_model.randomLeft();
-    Level4.my_model.randomRight();
-    streamSubscription = Level4.my_model.randomLeftUpdate.listen((newNumLeft) => setState(() {
-      numLeft = newNumLeft;
-      print("numLeft=${numLeft}"); //проверка
-    }));
-    streamSubscription = Level4.my_model.randomRightUpdate.listen((newNumRight) => setState(() {
-      numRight = newNumRight;
-    }));
-    print("numLeft=${numLeft}"); //проверка
-
-  }
-  //---------Проверка потока - Конец-------
-
-//  //---------Функция проверки сложности уровня - Начало-------
-//  @override
-//  void slognostLevel() async {
-//    SharedPreferences pref = await SharedPreferences.getInstance();
-//    level_of_difficulty = pref.getInt("Uroven_slognosti"); //присваеваем переменной уровень сложности
-//
-//    print("Уровень сложности");
-//    print(level_of_difficulty);
-//  }
-//  //---------Функция проверки сложности уровня - Конец-------
-
-  //---------Сброс всех значений на начальные; - Начало-------
-
-  @override
-  void dischargeState() {
-
-    n = 0; //Учавствует в цикле из 20 задний
-    correct_answer = 0; //Кол-во правильных ответов
-    correct_wrong = true; //правильно или неправильно
-    isList = true; //логич перемен для активации дополнительных кнопок
-    stringSumma = "";
-    timeGame = 0;
-    timeWait = timeWaitSlognost;
-    for (int i = 0; i <= 19; i++) {
-      massivColorLevel1[i] = Colors.blueGrey;
-    }
-
-  }
-  //---------Сброс всех значений на начальные; - Конец-------
-
-//  //---------Функция сохранения пройденного уровня в памяти телефона - Начало----------------
-//  @override
-//  void saveInMemory() async {
-//    SharedPreferences prefs = await SharedPreferences.getInstance();
-//    await prefs.setInt("Level_completed", nameLevelInt + 1); //открываем следующий уровень и сохраняем в памяти телефона
-//    print("nameLevelInt ");
-//    print(nameLevelInt);
-//  }
-//  //---------Функция сохранения пройденного уровня в памяти телефона - Конец----------------
-
-  //-----Общий виджет кнопок с цифрами ответа ---- Начало---
+  //---------Массив с картинками типа ХЕШ-коллекции набор пар ключ-значение - Начало-------
+  var _massivImageLevel1 = {
+    0: Image.asset("assets/img_level1/level1_0.png"),
+    1: Image.asset("assets/img_level1/level1_1.png"),
+    2: Image.asset("assets/img_level1/level1_2.png"),
+    3: Image.asset("assets/img_level1/level1_3.png"),
+    4: Image.asset("assets/img_level1/level1_4.png"),
+    5: Image.asset("assets/img_level1/level1_5.png"),
+    6: Image.asset("assets/img_level1/level1_6.png"),
+    7: Image.asset("assets/img_level1/level1_7.png"),
+    8: Image.asset("assets/img_level1/level1_8.png"),
+    9: Image.asset("assets/img_level1/level1_9.png"),
+  };
+//---------Массив с картинками типа ХЕШ-коллекции набор пар ключ-значение - Конец-------
+//-----Общий виджет кнопок с цифрами ответа ---- Начало---
   Widget numButton(String text, Function onPress) {
     return InkWell(
       onTap: () {
@@ -310,8 +76,7 @@ class _Level4State extends State<Level4> {
   }
 
 //-----Общий виджет кнопок с цифрами ответа ---- Конец---
-
-//--------Функция при нажатии цифр для получения ответа - Начало-------
+  //--------Функция при нажатии цифр для получения ответа - Начало-------
   void addSymbol(symbol) {
     setState(() {
       if (stringSumma == "") {
@@ -323,50 +88,26 @@ class _Level4State extends State<Level4> {
   }
 
 //--------Функция при нажатии цифр для получения ответа - Конец-------
-
-  //+++++++++++Функция подсчет времени простоя игры  - Начало------
-  Future time_function() async {
-    setState(() {
-      Timer(Duration(milliseconds: 1000), () {
-        timeGame = timeGame + 1;
-        if (timeGame > 3) {
-          bool_smile = true;
-        } else {
-          bool_smile = false;
-        }
-        if (timeWait <= 0) {
-          isList = false;
-          print("STOP GAME, isList=${isList} ");
-        } else {
-          time_function();
-        }
-        chet_nechet = timeGame % 2;
-        timeWait = timeWait - 1;
-      });
-      if (n == 20 || timeWait <= 0) {
-        isList = false;
-        FocusScope.of(context).requestFocus(new FocusNode());
-        if ((n - correct_answer) <= level_of_difficulty) {
-          //если уровень пройден
-          _rowKey.currentState.showSnackBar(SnackBar(content: Text("Поздравляю!!! Уровень пройден. Вы правильно ответили на " + correct_answer.toString() + " вопросов из " + (n).toString())));
-          _saveUrovenInMemoru.saveInMemory(nameLevelInt); // вызывем функцию сохранения пройденного уровеня в памяти телефона
-        } else {
-          _rowKey.currentState.showSnackBar(SnackBar(content: Text("Уровень не пройден!!! Вы правильно ответили только на " + correct_answer.toString() + " вопросов из " + (n).toString())));
-        }
-      }
-
-      if (stopTimer == true) {
-        print("timeGame=${timeGame}, stopTimer=${stopTimer}, timeWait=${timeWait}, isList=${isList} ");
-      }
-    });
+  //---------Сброс всех значений на начальные; - Начало-------
+  @override
+  void dischargeState() {
+    n = 0; //Учавствует в цикле из 20 задний
+    correct_answer = 0; //Кол-во правильных ответов
+    correct_wrong = true; //правильно или неправильно
+    isList = true; //логич перемен для активации дополнительных кнопок
+    stringSumma = "";
+    timeGame = 0;
+    timeWait = timeWaitSlognost;
+    for (int i = 0; i <= 19; i++) {
+      massivColorLevel1[i] = Colors.blueGrey;
+    }
   }
-
-//+++++++++++Функция подсчет времени простоя игры - Конец------
+  //---------Сброс всех значений на начальные; - Конец-------
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _rowKey,
+//      key: _rowKey,
       body: Center(
         child: Stack(
           children: <Widget>[
@@ -513,18 +254,25 @@ class _Level4State extends State<Level4> {
                   children: <TableRow>[
                     TableRow(
                       children: [
-                        Container(
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.all(5),
-                            margin: EdgeInsets.all(1),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              border: Border.all(width: 1, color: Colors.black12),
-                            ),
-                            child: _massivImageLevel1[numLeft], //Генерирует из массива левую картинку
-                          ),
-                        ),
+                        BlocBuilder(
+                            bloc: _myBloc,
+                            builder: (prev, curr) {
+                              print("curr= ${curr}");
+                              if(curr is RandomLeftState){
+                                numLeft=curr.numLeftstate;
+                                print("numLeft ${numLeft}");
+                              }
+                              return Container(
+                                width: MediaQuery.of(context).size.width,
+                                padding: EdgeInsets.all(5),
+                                margin: EdgeInsets.all(1),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                  border: Border.all(width: 1, color: Colors.black12),
+                                ),
+                                child: _massivImageLevel1[numLeft], //Генерирует из массива левую картинку
+                              );
+                            }),
                         Container(
                           child: Container(
                             width: MediaQuery.of(context).size.width,
@@ -670,7 +418,7 @@ class _Level4State extends State<Level4> {
                                   ),
                                   onPressed: () {
                                     dischargeState(); //вызываем функцию сброса данных для логики
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Level4()));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Level4_1()));
                                   },
                                 ),
                                 //--------Кнопка "Повторить" - Конец--------------
@@ -701,7 +449,7 @@ class _Level4State extends State<Level4> {
                                   onPressed: () {
                                     dischargeState(); //вызываем функцию сброса данных для логики
                                     dispose();
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => isList == true && stopTimer == false ? GameLivels() : Level4()));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => isList == true && stopTimer == false ? GameLivels() : Level4_1()));
                                   },
                                 ),
                                 //--------Кнопка "Следующий уровень" - Конец--------------
@@ -808,6 +556,7 @@ class _Level4State extends State<Level4> {
                                   n++; //переходим к следующему вопросу
 //                                  Level4.my_model.randomLeft();
 //                                  Level4.my_model.randomRight();
+
                                   _myBloc.dispatch(RandomLeftEvent(numLeft));
                                   _myBloc.dispatch(RandomRightEvent(numRight));
 

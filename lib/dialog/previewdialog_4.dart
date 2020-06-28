@@ -3,6 +3,7 @@ import 'package:quiz/gamelivels.dart';
 import 'package:quiz/levels/level1.dart';
 import 'package:quiz/levels/level2.dart';
 import 'package:quiz/levels/level4.dart';
+import 'package:quiz/levels/level4_1.dart';
 import 'package:quiz/main.dart';
 
 class PreviewDialog_4 extends StatefulWidget {
@@ -160,7 +161,7 @@ class _PreviewDialog_4State extends State<PreviewDialog_4> {
                                         style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
                                       ),
                                       onPressed: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Level4()));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Level4_1()));
                                       },
                                     ),
                                   ),

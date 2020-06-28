@@ -160,10 +160,10 @@ Widget gameLevel(massivColorLevel1) {
       style: TextStyle(fontSize: 2, fontWeight: FontWeight.bold, color: Colors.white),
     ),
   );
-  //---Конец---Общий виджет полоса пройденных вопросов-------
-
 
 }
+//---Конец---Общий виджет полоса пройденных вопросов-------
+
 class _My_varsState extends State<My_vars> {
 
   //-----Общий виджет кнопок с цифрами ответа ---- Начало---
