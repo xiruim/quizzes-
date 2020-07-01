@@ -1,4 +1,4 @@
-import 'dart:math';
+//import 'dart:math';
 
 //-------------State - Состояние---------------
 //создадим абстрактный класс (Абстрактный класс - это тип класса, который не может быть создан непосредственно, что означает, что объект не может быть создан из него)
@@ -8,7 +8,6 @@ abstract class MyState {}
 class InitState extends MyState {
   //инициализация
   InitState();
-
   //---переопределение например Возвращает строковое представление  целого числа
   @override
   String toString() {
@@ -26,22 +25,22 @@ class LoadingState extends MyState {
 
 //функция которая возвращаает значение для Левых цифр
 class RandomLeftState extends MyState {
-  int numLeftstate; //значение
-  RandomLeftState(this.numLeftstate); //которое будет возвращаться
+  int value; //значение
+  RandomLeftState(this.value); //которое будет возвращаться
   @override
   String toString() {
-    print("my_state numL/R ${numLeftstate}");
+    print("my_state numL ${value}");
     return "";
   }
 }
 
 //функция которая возвращаает значение для Правых цифр
 class RandomRightState extends MyState {
-  int numRight; //значение
-  RandomRightState(this.numRight); //которое будет возвращаться
+  int value; //значение
+  RandomRightState(this.value); //которое будет возвращаться
   @override
   String toString() {
-    print("my_state numL/R ${numRight}");
+//    print("my_state numR ${numRight}");
     return "";
   }
 }

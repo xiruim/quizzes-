@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,12 +17,19 @@ class Level4_1 extends StatefulWidget {
 
 class _Level4_1State extends State<Level4_1> {
   MyBloc _myBloc;
+  int _numLeft = 0;
+  int numRight = 0;
+
+  //--------Задаем ключи - Начало----------
+  final _rowKey = GlobalKey<ScaffoldState>();
+  //--------Задаем ключи - Конец----------
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _myBloc = MyBloc();
+    reload();
   }
 
   @override
@@ -88,6 +97,19 @@ class _Level4_1State extends State<Level4_1> {
   }
 
 //--------Функция при нажатии цифр для получения ответа - Конец-------
+
+  //--------Функция смены картинок--Начало-----
+  @override
+  void reload(){
+    // ignore: deprecated_member_use
+    _myBloc.dispatch(RandomLeftEvent(_numLeft));
+    Timer(Duration(milliseconds: 1), () {//установил таймер т.к. без него первая цифра не меняется
+      // ignore: deprecated_member_use
+      _myBloc.dispatch(RandomRightEvent(numRight));
+    });
+  }
+  //--------Функция смены картинок--Конец-----
+
   //---------Сброс всех значений на начальные; - Начало-------
   @override
   void dischargeState() {
@@ -107,10 +129,19 @@ class _Level4_1State extends State<Level4_1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//      key: _rowKey,
+      key: _rowKey,
       body: Center(
         child: Stack(
           children: <Widget>[
+//            BlocListener(
+//              bloc: _myBloc,
+//              listener: (prev, curr){
+//                if(curr is ErrState){
+//                  _rowKey.currentState.showSnackBar(
+//                      SnackBar(content: Text(curr.err.message),));
+//                }
+//              },
+//            ),
             //-----------Фоновое изображение - Начало----------
             Positioned(
               child: Image.asset(fon_img),
@@ -257,10 +288,34 @@ class _Level4_1State extends State<Level4_1> {
                         BlocBuilder(
                             bloc: _myBloc,
                             builder: (prev, curr) {
-                              print("curr= ${curr}");
-                              if(curr is RandomLeftState){
-                                numLeft=curr.numLeftstate;
-                                print("numLeft ${numLeft}");
+//                              print("curr1= ${curr.toString()}");
+//                              print("curr.numLeftVal= ${curr.numLeftVal}");
+                              if (curr is RandomLeftState || curr is! RandomRightState) {
+                                _numLeft = curr.value;
+                                print("numLeft ${_numLeft}");
+                                print("curr.numLeftVal= ${curr.value}");
+                                return Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  padding: EdgeInsets.all(5),
+                                  margin: EdgeInsets.all(1),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    border: Border.all(width: 1, color: Colors.black12),
+                                  ),
+                                  child: _massivImageLevel1[_numLeft], //Генерирует из массива левую картинку
+                                );
+                              }
+                              if (curr is LoadingState) {
+                                return Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  padding: EdgeInsets.all(5),
+                                  margin: EdgeInsets.all(1),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    border: Border.all(width: 1, color: Colors.black12),
+                                  ),
+                                  child: CircularProgressIndicator(), //в центе выводим крутилку
+                                );
                               }
                               return Container(
                                 width: MediaQuery.of(context).size.width,
@@ -270,21 +325,52 @@ class _Level4_1State extends State<Level4_1> {
                                   borderRadius: BorderRadius.all(Radius.circular(10)),
                                   border: Border.all(width: 1, color: Colors.black12),
                                 ),
-                                child: _massivImageLevel1[numLeft], //Генерирует из массива левую картинку
+                                child: _massivImageLevel1[_numLeft], //Генерирует из массива левую картинку
                               );
                             }),
-                        Container(
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.all(5),
-                            margin: EdgeInsets.all(1),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              border: Border.all(width: 1, color: Colors.black12),
-                            ),
-                            child: _massivImageLevel1[numRight], //Генерирует из массива правую картинку
-                          ),
-                        ),
+                        BlocBuilder(
+                            bloc: _myBloc,
+                            builder: (prev, curr) {
+//                              print("curr1= ${curr.toString()}");
+//                              print("curr.numLeftVal= ${curr.numLeftVal}");
+                              if (curr is! RandomLeftState || curr is RandomRightState) {
+                                numRight = curr.value;
+                                print("numLeft ${numRight}");
+                                print("curr.numRightVal= ${curr.value}");
+                                return Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  padding: EdgeInsets.all(5),
+                                  margin: EdgeInsets.all(1),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    border: Border.all(width: 1, color: Colors.black12),
+                                  ),
+                                  child: _massivImageLevel1[numRight], //Генерирует из массива левую картинку
+                                );
+                              }
+                              if (curr is LoadingState) {
+                                return Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  padding: EdgeInsets.all(5),
+                                  margin: EdgeInsets.all(1),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    border: Border.all(width: 1, color: Colors.black12),
+                                  ),
+                                  child: CircularProgressIndicator(), //в центе выводим крутилку
+                                );
+                              }
+                              return Container(
+                                width: MediaQuery.of(context).size.width,
+                                padding: EdgeInsets.all(5),
+                                margin: EdgeInsets.all(1),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                  border: Border.all(width: 1, color: Colors.black12),
+                                ),
+                                child: _massivImageLevel1[numRight], //Генерирует из массива левую картинку
+                              );
+                            }),
                       ],
                     ),
                   ],
@@ -540,7 +626,7 @@ class _Level4_1State extends State<Level4_1> {
                               setState(() {
                                 if (n <= 19) {
                                   //если условие выполняется то выполнять следующие действия
-                                  intSummaLR = numLeft + numRight;
+                                  intSummaLR = _numLeft + numRight;
                                   print("stringSumma= ${stringSumma}");
                                   intSummaParse = int.parse(stringSumma);
 
@@ -556,9 +642,14 @@ class _Level4_1State extends State<Level4_1> {
                                   n++; //переходим к следующему вопросу
 //                                  Level4.my_model.randomLeft();
 //                                  Level4.my_model.randomRight();
+                                  reload();
 
-                                  _myBloc.dispatch(RandomLeftEvent(numLeft));
-                                  _myBloc.dispatch(RandomRightEvent(numRight));
+//                                  // ignore: deprecated_member_use
+//                                  _myBloc.dispatch(RandomLeftEvent(_numLeft));
+//                                  Timer(Duration(milliseconds: 1), () {//установил таймер т.к. без него первая цифра не меняется
+//                                    // ignore: deprecated_member_use
+//                                    _myBloc.dispatch(RandomRightEvent(numRight));
+//                                  });
 
                                   stopTimer = false; //остнавливаем таймер
                                   timeGame = 0; //сбрасываем счетчик на 0

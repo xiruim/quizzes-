@@ -34,18 +34,18 @@ class MyProvider{
 //---------Функция проверки сложности уровня - Конец-------
 
   //--------Функция генерации Левых цифр от 0 до 9 - Начало-------
-  randomLeft(int numLeftprovider) {
-    numLeftprovider = random.nextInt(10); //Генерируем цифры от 0 до 9
-    print("my_provider numL ${numLeftprovider} ");
-  return numLeftprovider;
+  randomLeft(int value) {
+    value = random.nextInt(10); //Генерируем цифры от 0 до 9
+    print("my_provider numL ${value} ");
+  return value;
   }
 //--------Функция генерации Левых цифр от 0 до 9 - Конец-------
 
   //--------Функция генерации Правых цифр от 0 до 9 - Начало-------
-  randomRight( int numRight) {
-    numRight = random.nextInt(10); //Генерируем цифры от 0 до 9
+  randomRight( int value) {
+    value = random.nextInt(10); //Генерируем цифры от 0 до 9
 //    print("my_provider numR ${numRight} ");
-    return numRight;
+    return value;
   }
 //--------Функция генерации Правых цифр от 0 до 9 - Конец-------
 

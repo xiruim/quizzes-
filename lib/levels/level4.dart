@@ -808,6 +808,7 @@ class _Level4State extends State<Level4> {
                                   n++; //переходим к следующему вопросу
 //                                  Level4.my_model.randomLeft();
 //                                  Level4.my_model.randomRight();
+                                  // ignore: deprecated_member_use
                                   _myBloc.dispatch(RandomLeftEvent(numLeft));
                                   _myBloc.dispatch(RandomRightEvent(numRight));
 
