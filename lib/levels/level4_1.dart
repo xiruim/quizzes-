@@ -17,8 +17,8 @@ class Level4_1 extends StatefulWidget {
 
 class _Level4_1State extends State<Level4_1> {
   MyBloc _myBloc;
-  int numLeft = 0;
-  int numRight = 0;
+  int numLeft = 3;
+  int numRight = 2;
 
   //--------Задаем ключи - Начало----------
   final _rowKey = GlobalKey<ScaffoldState>();
@@ -26,13 +26,12 @@ class _Level4_1State extends State<Level4_1> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     _myBloc = MyBloc();
-    reload();
-    Timer(Duration(seconds: 2), () {
-      reload();
-    });
+    _myBloc.dispatch(RandomLeftEvent(3));//не получилось все равно при ктивации сраницы картинки не появляются
+    _myBloc.dispatch(RandomRightEvent(5));//не получилось все равно при ктивации сраницы картинки не появляются
+
+//     TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -112,6 +111,7 @@ class _Level4_1State extends State<Level4_1> {
       _myBloc.dispatch(RandomRightEvent(numRight));
     });
   }
+
   //--------Функция смены картинок--Конец-----
 
   //---------Сброс всех значений на начальные; - Начало-------
@@ -392,7 +392,7 @@ class _Level4_1State extends State<Level4_1> {
                                   child: _massivImageLevel1[numRight], //Генерирует из массива левую картинку
                                 );
                               }),
-                        ),
+                        )
                       ],
                     ),
                   ],
@@ -662,17 +662,8 @@ class _Level4_1State extends State<Level4_1> {
                                     massivColorLevel1[n] = Colors.red; //присваиваем красный - неправильно
                                   }
                                   n++; //переходим к следующему вопросу
-//                                  Level4.my_model.randomLeft();
 //                                  Level4.my_model.randomRight();
                                   reload();
-
-//                                  // ignore: deprecated_member_use
-//                                  _myBloc.dispatch(RandomLeftEvent(_numLeft));
-//                                  Timer(Duration(milliseconds: 1), () {//установил таймер т.к. без него первая цифра не меняется
-//                                    // ignore: deprecated_member_use
-//                                    _myBloc.dispatch(RandomRightEvent(numRight));
-//                                  });
-
                                   stopTimer = false; //остнавливаем таймер
                                   timeGame = 0; //сбрасываем счетчик на 0
                                   stopTimer = true; //запускаем таймер

@@ -52,10 +52,29 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([
+//      DeviceOrientation.landscapeRight,//портретный режим экрана
+//      DeviceOrientation.landscapeLeft,//портретный режим экрана
+      DeviceOrientation.portraitUp,//нормальный режим экрана
+      DeviceOrientation.portraitDown,//нормальный режим экрана
+    ]);
     loadSlognostInMemory();
   }
   //---------При входе на данный уровень игры обращаемся через данную функцию к функции генерации случайных чисел randomLeftRight(); - Конец-------
 
+  @override
+  dispose(){
+    //---Возвращает экран в нормальное положение после закрытия странички---Начало
+    //Если не нужно чтобы только эта страничка была портретной а остальное нормальной ниобходимо нижеследующее разкоментировать
+//    SystemChrome.setPreferredOrientations([
+//      DeviceOrientation.landscapeRight,
+//      DeviceOrientation.landscapeLeft,
+//      DeviceOrientation.portraitUp,
+//      DeviceOrientation.portraitDown,
+//    ]);
+    //---Возвращает экран в нормальное положение после закрытия странички---Конец
+    super.dispose();
+  }
 
 //  //---------Массив с Текстом "Уровень сложности" типа ХЕШ-коллекции набор пар ключ-значение - Начало-------
 //  var _massivTextUrovenSlognosti = {
